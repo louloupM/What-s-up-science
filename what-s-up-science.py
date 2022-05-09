@@ -9,9 +9,7 @@ from PIL import Image
 import pandas as pd
 import webbrowser
 import streamlit.components.v1 as components
-import spacy
-from spacy.tokens import DocBin, Doc
-from spacy.training.example import Example
+
 from transformers import AutoTokenizer, AutoModel
 from itertools import chain
 import requests
