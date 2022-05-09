@@ -155,20 +155,7 @@ if choice == 'Home':
            f.write(str(final_file))
            f.close()
 
-        nlp_science=spacy.load("en_scibert_ScienceIE")
 
-        def abstract_extract(text):
-           print(type(text))
-           for doc in nlp_science.pipe(text, disable=["tagger", "parser"]):
-              task = [e.text for e in doc.ents if e.label_ == 'TASK']
-              process = [e.text for e in doc.ents if e.label_ == 'PROCESS']
-              material=[e.text for e in doc.ents if e.label_ == 'MATERIAL']
-
-           return task,process,material
-
-        analyze_articles_csv()
-
-        final_file = str(final_file)
         st.write('File processed')
         
 
