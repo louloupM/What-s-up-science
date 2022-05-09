@@ -8,4 +8,3 @@ spacy==3.1.1
 transformers==4.9.2
 requests==2.25.1
 docx2txt==0.8
-https://huggingface.co/UBIAI/en_scibert_ScienceIE/resolve/main/en_scibert_ScienceIE-any-py3-none-any.whl==0.0.0
