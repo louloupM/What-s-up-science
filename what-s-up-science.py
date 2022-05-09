@@ -27,18 +27,6 @@ from matplotlib import pyplot as plt
 
 
 
-import bokeh
-from bokeh.models import ColumnDataSource, HoverTool, LinearColorMapper, CustomJS, Slider, TapTool, TextInput
-from bokeh.palettes import Category20
-from bokeh.transform import linear_cmap, transform
-from bokeh.io import output_file, show, output_notebook
-from bokeh.plotting import figure, save
-from bokeh.models import RadioButtonGroup, TextInput, Div, Paragraph
-from bokeh.layouts import column, widgetbox, row, layout
-from bokeh.layouts import column
-
-
-
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 
