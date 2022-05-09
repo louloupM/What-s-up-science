@@ -21,7 +21,7 @@ import docx2txt
 
 import numpy as np
 import pandas as pd
-import spacy
+
 
 
 from matplotlib import pyplot as plt
