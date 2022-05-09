@@ -46,7 +46,7 @@ wordcloudrow2col1, wordcloudrow2col2, wordcloudrow2col3 = st.columns([6,1,6])
 row2col1, row2col2, row2col3, row2col4 = st.columns(4)
 row3col1, row3col2 = st.columns(2)
 
-menu = ["Home", "Word Clouds","Analytics", "Cluster"]
+menu = ["Home", "Word Clouds"]
 choice = st.sidebar.selectbox("Menu",menu)
 
 
