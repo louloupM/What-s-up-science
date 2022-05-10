@@ -36,7 +36,7 @@ df_journal_list = pd.read_csv(url)
 st.set_option('deprecation.showPyplotGlobalUse', False)
 st.set_page_config(layout="wide")
 st.markdown("<h1 style='text-align: center; color: Black;'>What's up Science ?</h1>", unsafe_allow_html=True)
-header = st.container()
+
 data = st.file_uploader("Upload a Dataset", type=["csv"]) 
 wordcloud_material = st.container()
 wordcloud_process = st.container()
