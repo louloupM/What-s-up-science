@@ -61,7 +61,20 @@ if data is not None:
     keywords = titles.most_common(20)
     
     st.write(keywords)
+    
+    word_cloud_dict = Counter(wordcloud_material)
+    wordcloud = WordCloud(background_color = 'white',width=1000, height=500, max_words = 40).generate_from_frequencies(word_cloud_dict)           
+    plt.imshow(wordcloud)
+    plt.axis("off")
+    row1col1.pyplot()
+        
+    df = pd.DataFrame(materials)
+    df.columns = ['A', 'B']
+    x = df.loc[:50,'A'].values
+    y = df.loc[:50,'B'].values
+    plt.gca().invert_yaxis()
+    plt.tick_params(axis='x', labelsize=4)
+    plt.tick_params(axis='y', labelsize=4)
+    plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
+    wordcloudrow2col1.pyplot() 
             
-
-
-
