@@ -76,6 +76,35 @@ if data is not None:
 
     row1col3.pyplot()
     
+    year = library['Year'].to_list()
+    year_occurence = Counter(year).most_common()
+    df = pd.DataFrame(year_occurence)
+    df.columns = ['A', 'B']
+    x = df.loc[:20,'A'].values
+    y = df.loc[:20,'B'].values
+
+    plt.tick_params(axis='x')
+    plt.tick_params(axis='y')
+    plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
+
+    row1col2.pyplot()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     Year = []
     Country = []
     iso_alpha = []
