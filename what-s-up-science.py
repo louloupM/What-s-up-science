@@ -45,7 +45,7 @@ wordcloud_material = st.container()
 wordcloud_process = st.container()
 graph_pie = st.container()
 journals_list = st.container()
-row1col1, row1col2, row1col3 = st.columns([7,4.5,7])
+row1col1, row1col2, row1col3 = st.columns([7,4.7,7])
 row2 = st.container()
 
  
@@ -71,7 +71,7 @@ if data is not None:
     df = pd.DataFrame(journals_occurence)    
     df.columns = ['A', 'B']
     df['A'] = df['A'].fillna('None')
-    df['A'] = [item[:50] for item in df['A']]
+    df['A'] = [item[:40] for item in df['A']]
 
 
     plt.imshow(wordcloud)
