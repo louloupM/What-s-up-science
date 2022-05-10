@@ -47,6 +47,7 @@ graph_pie = st.container()
 journals_list = st.container()
 row1col1, row1col2, row1col3 = st.columns([3,3,3])
 row2 = st.container()
+
  
     
 if data is not None:    
@@ -75,6 +76,7 @@ if data is not None:
     plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
 
     row1col3.pyplot()
+    row2
     
     year = library['Year'].to_list()
     year_occurence = Counter(year).most_common()
