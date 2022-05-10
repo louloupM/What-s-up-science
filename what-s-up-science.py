@@ -54,9 +54,10 @@ if data is not None:
     st.write('Please wait : file being processed...')
     library = pd.read_csv(data)
     
-    library['Title'] = library['Title'].astype(str)
+    titles = library['Title'].astype(str)
+    keywords = r.extract_keywords_from_text(<titles>)
     
-    st.write(library['Title'])
+    st.write(keywords)
             
 
 
