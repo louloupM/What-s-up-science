@@ -48,8 +48,7 @@ row2col1, row2col2, row2col3, row2col4 = st.columns(4)
 row3col1, row3col2 = st.columns(2)
  
     
-if data is not None:
-    st.write('Please wait : file being processed...')
+if data is not None:    
     library = pd.read_csv(data)
     titles = library['Title'].to_list()
     titles = str(titles).split()
@@ -63,9 +62,7 @@ if data is not None:
     row1col1.pyplot()
     
     journal = library['Journal'].to_list()
-    st.write(journal)
     journals = []
-
     journals_occurence = Counter(journal).most_common()
     df = pd.DataFrame(journals_occurence)
     df.columns = ['A', 'B']
