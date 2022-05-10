@@ -60,9 +60,10 @@ if data is not None:
     
     
     titles = [re.sub(r'[^\w\s]',' ',word) for word in titles]
+    st.write(titles)
     titles = [word for word in titles if word not in stopwords.words('english')]
     titles = Counter(titles)
-    st.write(titles)
+    
     keywords = titles.most_common(20)
     wordcloud = WordCloud(background_color = 'white', width=1000, height=450, max_words = 20).generate_from_frequencies(titles)           
     
