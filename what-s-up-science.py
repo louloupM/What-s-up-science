@@ -56,6 +56,7 @@ if data is not None:
     titles = [word for word in titles if word not in stopwords.words('english')]
 
     titles = Counter(titles)
+    st.write(titles)
 
     keywords = titles.most_common(20)
     
