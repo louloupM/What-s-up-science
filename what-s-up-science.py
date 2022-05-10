@@ -53,9 +53,9 @@ if data is not None:
     st.write('Please wait : file being processed...')
     library = pd.read_csv(data)
     
-    test = library['Title'].astype(str)
+    library['Title'] = library['Title'].astype(str)
     
-    st.write(test)
+    st.write(library['Title'])
             
 
 
