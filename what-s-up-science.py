@@ -63,15 +63,15 @@ if data is not None:
     row1col1.pyplot()
     
     journal = library['Journal'].to_list()
-    journal = [item[:30] for item in journal]
+    journal = [item[:50] for item in journal]
     journals_occurence = Counter(journal).most_common()
     df = pd.DataFrame(journals_occurence)
     df.columns = ['A', 'B']
     x = df.loc[:20,'A'].values
     y = df.loc[:20,'B'].values
     plt.gca().invert_yaxis()
-    plt.tick_params(axis='x', labelsize=12)
-    plt.tick_params(axis='y', labelsize=12)
+    plt.tick_params(axis='x', labelsize=10)
+    plt.tick_params(axis='y', labelsize=10)
     plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
 
     row1col3.pyplot()
