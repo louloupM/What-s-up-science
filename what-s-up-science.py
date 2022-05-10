@@ -68,12 +68,14 @@ if data is not None:
     dg.columns = ['A', 'B']
     
     journal = library['Source title'].to_list()
-
     journals_occurence = Counter(journal).most_common()
     df = pd.DataFrame(journals_occurence)    
     df.columns = ['A', 'B']
     df['A'] = df['A'].fillna('None')
     df['A'] = [item[:40] for item in df['A']]
+    
+    citation = library['Cited by'].sum(axis=1)
+    st.write(citation)
 
 
     plt.imshow(wordcloud)
