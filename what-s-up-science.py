@@ -56,6 +56,7 @@ if data is not None:
     titles = library['Title'].to_list()    
     titles = [each_string.lower() for each_string in titles]
     titles = [element.split() for element in titles]
+    st.write(titles)
     titles = ' '.join(str(e) for e in titles)
     
     
