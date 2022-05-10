@@ -76,7 +76,7 @@ if data is not None:
     plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
 
     row1col3.pyplot()
-    st.markdown("<h1 style='text-align: center; color: Black;'></h1>", unsafe_allow_html=True)
+    row2.markdown("<h1 style='text-align: center; color: Black;'>Coucou</h1>", unsafe_allow_html=True)
     
     year = library['Year'].to_list()
     year_occurence = Counter(year).most_common()
