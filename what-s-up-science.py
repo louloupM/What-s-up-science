@@ -59,11 +59,6 @@ if data is not None:
     titles = Counter(titles)
     keywords = titles.most_common(20)
     wordcloud = WordCloud(background_color = 'white', width=1000, height=450, max_words = 20).generate_from_frequencies(titles)           
-    plt.imshow(wordcloud)
-    plt.axis("off")
-    row1col1.pyplot(use_container_width=True)
-    
-
     
     year = library['Year'].to_list()
     year_occurence = Counter(year).most_common()
@@ -74,37 +69,27 @@ if data is not None:
     journals_occurence = Counter(journal).most_common()
     df = pd.DataFrame(journals_occurence)
     df.columns = ['A', 'B']
+
+    plt.imshow(wordcloud)
+    plt.axis("off")
+    row1col1.pyplot(use_container_width=True)
     
     x1 = dg.loc[:50,'A'].values
     y1 = dg.loc[:50,'B'].values
     plt.tick_params(axis='x')
     plt.tick_params(axis='y')
     plt.bar(x1, y1,edgecolor = "none", label = 'Bar', color = 'lightskyblue')
-
     row1col2.pyplot(use_container_width=True,)
     
     
 
-    x = df.loc[:20,'A'].values
-    y = df.loc[:20,'B'].values
+    x2 = df.loc[:20,'A'].values
+    y2 = df.loc[:20,'B'].values
     plt.gca().invert_yaxis()
     plt.tick_params(axis='x')
     plt.tick_params(axis='y')
-    plt.barh(x, y, label = 'Bar', color = 'lightskyblue')
-
+    plt.barh(x2, y2, label = 'Bar', color = 'lightskyblue')
     row1col3.pyplot(use_container_width=True,)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
