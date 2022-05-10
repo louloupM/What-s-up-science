@@ -73,7 +73,7 @@ if data is not None:
     y = dg.loc[:50,'B'].values
     plt.tick_params(axis='x')
     plt.tick_params(axis='y')
-    plt.bar(x, y, height=2, label = 'Bar', color = 'lightskyblue')
+    plt.bar(x, y, label = 'Bar', color = 'lightskyblue')
 
     row1col2.pyplot()
     
