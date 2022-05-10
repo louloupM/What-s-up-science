@@ -75,4 +75,68 @@ if data is not None:
     plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
 
     row1col3.pyplot()
-            
+    
+    Year = []
+    Country = []
+    iso_alpha = []
+    count = []
+
+    for index, row in library.iterrows():
+        if str(row['Affiliations']) == str('nan'):
+            pass
+        else:
+            x = row['Affiliations'].split(", ")
+
+            country = x[-1]
+
+
+        try :
+            code = pycountry.countries.search_fuzzy(country)
+            try:
+                code = code[0].alpha_3
+                iso_alpha.append(code)
+                Country.append(country)
+                Year.append(row['Year'])
+            except AttributeError:
+                pass
+        except LookupError:
+            pass
+
+
+    d = {'country':Country,'year':Year,'iso_alpha':iso_alpha}
+
+
+
+    # Calling DataFrame constructor on list
+    df = pd.DataFrame(d)
+    del df['year']
+
+    c = Counter(list(zip(df.country, df.iso_alpha)))
+
+    dc = pd.DataFrame.from_dict(c, orient='index').reset_index()
+    dc['index'] = dc['index'].astype(str)
+
+    dc = dc.rename({0: 'pop'}, axis=1)
+
+    print(dc)
+
+    dc[['country', 'iso_alpha']] = dc['index'].str.split(',', expand=True)
+
+    del dc["index"]
+    dc = dc.replace({',|\'|\(|\)|\ ':''}, regex=True)
+
+    #Move last Column to First Column
+    new_cols = ["country","iso_alpha","pop"]
+    dc=dc[new_cols]
+    #or
+    dc=dc.reindex(columns=new_cols)
+
+    print(dc)
+
+    fig = px.scatter_geo(dc, title = "WorldMap Ptoleme", locations="iso_alpha",
+                         hover_name="country", size='pop', size_max = 75, color ="country",
+                         projection="natural earth")
+
+
+    fig.show()
+
