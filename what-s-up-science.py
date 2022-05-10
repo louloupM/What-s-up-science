@@ -75,7 +75,8 @@ if data is not None:
     df['A'] = [item[:40] for item in df['A']]
     
     citation = library['Cited by'].sum() 
-    st.markdown("<h1 style='text-align: center; color: Black;'>"+str(citation)+"</h1>", unsafe_allow_html=True)
+    citation = round(citation)
+    st.markdown("<h1 style='text-align: center; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)
 
 
     plt.imshow(wordcloud)
