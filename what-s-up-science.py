@@ -64,13 +64,16 @@ if data is not None:
     journal = library['Journal'].to_list()
     st.write(journal)
     journals = []
-    for line in journal:
-        line = line.splitlines()
-        line = [element for item in line for element in item.split(', ')]
-        line = [x.strip() for x in line]
-        line = list(filter(None, line))
-        for element in line:
-            journals.append(element) 
-    
-    row1col2.markdown("<h1 style='text-align: center; color: White;'>Space</h1>", unsafe_allow_html=True)
+
+    journals_occurence = Counter(journal).most_common()
+    df = pd.DataFrame(journals_occurence)
+    df.columns = ['A', 'B']
+    x = df.loc[:20,'A'].values
+    y = df.loc[:20,'B'].values
+    plt.gca().invert_yaxis()
+    plt.tick_params(axis='x', labelsize=14)
+    plt.tick_params(axis='y', labelsize=14)
+    plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
+
+    row1col3.pyplot()
             
