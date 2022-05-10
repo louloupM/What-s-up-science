@@ -70,7 +70,7 @@ if data is not None:
     journals_occurence = Counter(journal).most_common()
     df = pd.DataFrame(journals_occurence)    
     df.columns = ['A', 'B']
-    df[A] = [item[:20] for item in df[A]]
+    df['A'] = [item[:20] for item in df['A']]
     st.write(df)
 
     plt.imshow(wordcloud)
