@@ -56,7 +56,8 @@ if choice == 'Home':
     
     if data is not None:
         st.write('Please wait : file being processed...')
-        st.write(data)
+        data2 = pd.read_csv(data)
+        st.write(data2)
             
 
 
