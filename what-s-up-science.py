@@ -46,115 +46,14 @@ wordcloudrow2col1, wordcloudrow2col2, wordcloudrow2col3 = st.columns([6,1,6])
 row2col1, row2col2, row2col3, row2col4 = st.columns(4)
 row3col1, row3col2 = st.columns(2)
 
-menu = ["Home", "Word Clouds"]
-choice = st.sidebar.selectbox("Menu",menu)
 
-
-
-if choice == 'Home':
-    data = st.file_uploader("Upload a Dataset", type=["csv"])     
+data = st.file_uploader("Upload a Dataset", type=["csv"])     
     
-    if data is not None:
-        st.write('Please wait : file being processed...')
-        data2 = pd.read_csv(data)
-        st.write(data2)
+if data is not None:
+    st.write('Please wait : file being processed...')
+    data2 = pd.read_csv(data)
+    st.write(data2)
             
 
 
 
-if choice == 'Word Clouds':
-    row1col3.markdown("<h2 style='text-align: center; color: Black;'>Process</h2>", unsafe_allow_html=True)
-    row1col1.markdown("<h2 style='text-align: center; color: Black;'>Material</h2>", unsafe_allow_html=True)
- 
-    with wordcloud_material:
-        temp = []
-        materials = []
-        wordcloud_material = []
-        
-        material = re.findall(r'material:(.*?)authors:', f, re.DOTALL) 
-        for line in material:
-            line = line.splitlines()
-            line = [element for item in line for element in item.split(', ')]
-            line = [x.strip() for x in line]
-            line = list(filter(None, line))
-            line = list(dict.fromkeys(line)) # delete elements in duplicates
-            for element in line:
-                if element in stop_words:
-                    pass
-                else:      
-                    if element[0].isupper():
-                        materials.append(element)       
-                    elif element[0].isdigit():
-                        materials.append(element)        
-                    elif element[0].islower():
-                        element = element.capitalize()
-                        materials.append(element)
-     
-        materials = Counter(materials).most_common()
-        for element in materials:
-            if re.search(r'\w+', str(element[0])):
-                wordcloud_material.append(str(element[0]))
-        
-
-        word_cloud_dict = Counter(wordcloud_material)
-        wordcloud = WordCloud(background_color = 'white',width=1000, height=500, max_words = 40).generate_from_frequencies(word_cloud_dict)           
-        plt.imshow(wordcloud)
-        plt.axis("off")
-        row1col1.pyplot()
-        
-        df = pd.DataFrame(materials)
-        df.columns = ['A', 'B']
-        x = df.loc[:50,'A'].values
-        y = df.loc[:50,'B'].values
-        plt.gca().invert_yaxis()
-        plt.tick_params(axis='x', labelsize=4)
-        plt.tick_params(axis='y', labelsize=4)
-        plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
-        wordcloudrow2col1.pyplot()     
-        
-    with wordcloud_process:
-        processes = []
-        wordcloud_process = []
-        process = re.findall(r'process:(.*?)material:', f, re.DOTALL)
-        for line in process:
-            line = line.splitlines()
-            line = [element for item in line for element in item.split(', ')]
-            line = [x.strip() for x in line]
-            line = [x.replace('–', '-') for x in line] 
-            line = list(filter(None, line))
-            line = list(dict.fromkeys(line)) # delete elements in duplicates
-            for element in line:
-                if element in stop_words:
-                    pass
-                else:
-                    if element[0].isupper():
-                        processes.append(element)       
-                    elif element[0].isdigit():
-                        processes.append(element)        
-                    elif element[0].islower():
-                        element = element.capitalize()
-                        processes.append(element)
-        
-        processes = Counter(processes).most_common()
-        for element in processes:
-            if re.search(r'\w+', str(element[0])):
-                wordcloud_process.append(str(element[0]))
-        
-
-        word_could_dict = Counter(wordcloud_process)
-        wordcloud = WordCloud(background_color = 'white',width=1000, height=500, max_words = 40).generate_from_frequencies(word_could_dict)           
-        plt.imshow(wordcloud)
-        plt.axis("off")    
-        row1col3.pyplot()
-
-        df = pd.DataFrame(processes)
-        df.columns = ['A', 'B']
-        x = df.loc[:50,'A'].values
-        y = df.loc[:50,'B'].values
-        plt.gca().invert_yaxis()
-        plt.tick_params(axis='x', labelsize=4)
-        plt.tick_params(axis='y', labelsize=4)
-        plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
-        wordcloudrow2col3.pyplot()
-
-    
