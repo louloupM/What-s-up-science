@@ -51,8 +51,9 @@ if data is not None:
     st.write('Please wait : file being processed...')
     library = pd.read_csv(data)
     titles = library['Title'].to_list()
+    titles = titles.split()
 
-    titles = Counter(str(titles))
+    titles = Counter(titles)
 
     keywords = titles.most_common(10)
     
