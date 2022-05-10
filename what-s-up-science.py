@@ -70,8 +70,8 @@ if data is not None:
     x = df.loc[:20,'A'].values
     y = df.loc[:20,'B'].values
     plt.gca().invert_yaxis()
-    plt.tick_params(axis='x', labelsize=10)
-    plt.tick_params(axis='y', labelsize=10)
+    plt.tick_params(axis='x')
+    plt.tick_params(axis='y')
     plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
 
     row1col3.pyplot()
