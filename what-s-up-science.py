@@ -68,8 +68,9 @@ if data is not None:
     journal = library['Source title'].to_list()
 
     journals_occurence = Counter(journal).most_common()
-    df = pd.DataFrame(journals_occurence)
+    df = pd.DataFrame(journals_occurence)    
     df.columns = ['A', 'B']
+    df[A] = [item[:20] for item in df[A]]
     st.write(df)
 
     plt.imshow(wordcloud)
