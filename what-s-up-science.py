@@ -66,14 +66,4 @@ if data is not None:
     plt.imshow(wordcloud)
     plt.axis("off")
     row1col1.pyplot()
-        
-    df = pd.DataFrame(materials)
-    df.columns = ['A', 'B']
-    x = df.loc[:50,'A'].values
-    y = df.loc[:50,'B'].values
-    plt.gca().invert_yaxis()
-    plt.tick_params(axis='x', labelsize=4)
-    plt.tick_params(axis='y', labelsize=4)
-    plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
-    wordcloudrow2col1.pyplot() 
             
