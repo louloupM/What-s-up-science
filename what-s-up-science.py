@@ -37,7 +37,6 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 st.set_page_config(layout="wide")
 st.markdown("<h1 style='text-align: center; color: Black;'>What's up Science ?</h1>", unsafe_allow_html=True)
 header = st.container()
-data = st.file_uploader("Upload a Dataset", type=["csv"])  
 wordcloud_material = st.container()
 wordcloud_process = st.container()
 graph_pie = st.container()
@@ -47,7 +46,8 @@ wordcloudrow2col1, wordcloudrow2col2, wordcloudrow2col3 = st.columns([6,1,6])
 row2col1, row2col2, row2col3, row2col4 = st.columns(4)
 row3col1, row3col2 = st.columns(2)
 
-
+if data is None:
+    data = st.file_uploader("Upload a Dataset", type=["csv"])  
     
 if data is not None:
     st.write('Please wait : file being processed...')
