@@ -9,13 +9,10 @@ from PIL import Image
 import pandas as pd
 import webbrowser
 import streamlit.components.v1 as components
-
 from transformers import AutoTokenizer, AutoModel
 from itertools import chain
 import requests
 import os
-import docx2txt
-
 import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -23,10 +20,6 @@ from nltk.corpus import stopwords
 import numpy as np
 import pandas as pd
 from rake_nltk import Rake
-
-
-
-
 from matplotlib import pyplot as plt
 
 
@@ -60,7 +53,7 @@ if data is not None:
     
     titles = library['Title'].astype(str)
     r = Rake()
-    keywords = r.extract_keywords_from_text(titles)
+    keywords = r.extract_keywords_from_text(str(titles))
     
     st.write(keywords)
             
