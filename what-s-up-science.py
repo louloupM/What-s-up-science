@@ -138,5 +138,5 @@ if data is not None:
                          projection="natural earth")
 
 
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, use_container_width=False, sharing="streamlit")
 
