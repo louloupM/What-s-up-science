@@ -60,9 +60,9 @@ if data is not None:
 
     keywords = titles.most_common(20)
     
-    st.write(keywords)
+
     
-    word_cloud_dict = Counter(wordcloud_material)
+    word_cloud_dict = keywords
     wordcloud = WordCloud(background_color = 'white',width=1000, height=500, max_words = 40).generate_from_frequencies(word_cloud_dict)           
     plt.imshow(wordcloud)
     plt.axis("off")
