@@ -56,68 +56,7 @@ if choice == 'Home':
     
     if data is not None:
         st.write('Please wait : file being processed...')
-        final_file=[]
-        text = docx2txt.process(data)
-        text = text.splitlines()
-        text = list(filter(None, text))
-        
-        title=[]
-        authors=[]
-        metadata=[]
-        journal=[]
-        DOI=[]
-        citing=[]
-        abstract=[]
-        temp = []
-
-        flag=False
-
-        for line in text:
-            if re.match(r'^\d+. ',line):
-                flag = True
-            if '~' in line:
-                flag = False
-            if flag:
-                temp.append(line)  
-            
-        for line in temp:            
-            if not line.startswith('From') and not line.startswith('By') and not line.startswith('\n') and not re.match(r'^\d+. ',line):
-                line = re.sub('\n','', line)
-                abstract.append(line)
-                
-        for line in temp:
-            if re.match(r'^\d+. ',line):
-                line = re.sub(r'^\d+. ','', line)
-                title.append(line)
-            if line.startswith('By'):                
-                line = re.sub('\n','', line)
-                line = line[3:]
-                authors.append(line)
-            if line.startswith('From'):
-                metadata.append(line)
-
-        temp=[]
-    
-        for line in metadata:
-            start_journal=line.find('From ')+ len('From ')
-            end_journal=line.find('(')
-            start_DOI=line.find('DOI:')            
-            journal_name = line[start_journal:end_journal]
-            journal.append(journal_name)
-            
-            DOI_number=line[start_DOI:]
-            if 'DOI:' in DOI_number:
-                DOI_number=DOI_number[4:]
-                DOI_number = re.sub('\n','', DOI_number)
-                DOI.append(DOI_number)
-            else:
-                DOI_number='none'
-                DOI.append(DOI_number)
-        
-
-
-        data2 = pd.DataFrame(zip(title, authors, journal, DOI, abstract), columns =['Title', 'Authors', 'Journal','DOI', 'Abstract'])
-        st.write(data2)
+        st.write(data)
             
 
 
