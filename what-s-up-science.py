@@ -45,7 +45,7 @@ wordcloud_material = st.container()
 wordcloud_process = st.container()
 graph_pie = st.container()
 journals_list = st.container()
-row1col1, row1col2, row1col3 = st.columns([6.5,4,6.5])
+row1col1, row1col2, row1col3 = st.columns([7,4.25,7])
 row2 = st.container()
 
  
