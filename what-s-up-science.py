@@ -52,7 +52,8 @@ if data is not None:
     library = pd.read_csv(data)
     titles = library['Title'].to_list()
     titles = str(titles).split()
-    titles = ' '.join([word for word in titles.split() if word not in (stopwords.words('english'))])
+    st.write(titles)
+
 
 
     titles = Counter(titles)
