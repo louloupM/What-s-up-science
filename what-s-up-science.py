@@ -82,7 +82,6 @@ if data is not None:
     dg.columns = ['A', 'B']
     x = dg.loc[:50,'A'].values
     y = dg.loc[:50,'B'].values
-    plt.gca().invert_yaxis()
     plt.tick_params(axis='x')
     plt.tick_params(axis='y')
     plt.bar(x, y, label = 'Bar', color = 'lightskyblue')
