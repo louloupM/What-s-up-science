@@ -69,20 +69,22 @@ if data is not None:
     year_occurence = Counter(year).most_common()
     dg = pd.DataFrame(year_occurence)
     dg.columns = ['A', 'B']
-    x = dg.loc[:50,'A'].values
-    y = dg.loc[:50,'B'].values
-    plt.tick_params(axis='x')
-    plt.tick_params(axis='y')
-    plt.bar(x, y,edgecolor = "none", label = 'Bar', color = 'lightskyblue')
-
-    row1col2.pyplot(use_container_width=True,)
-    
-    
     journal = library['Journal'].to_list()
     journal = [item[:50] for item in journal]
     journals_occurence = Counter(journal).most_common()
     df = pd.DataFrame(journals_occurence)
     df.columns = ['A', 'B']
+    
+    x1 = dg.loc[:50,'A'].values
+    y1 = dg.loc[:50,'B'].values
+    plt.tick_params(axis='x1')
+    plt.tick_params(axis='y1')
+    plt.bar(x, y,edgecolor = "none", label = 'Bar', color = 'lightskyblue')
+
+    row1col2.pyplot(use_container_width=True,)
+    
+    
+
     x = df.loc[:20,'A'].values
     y = df.loc[:20,'B'].values
     plt.gca().invert_yaxis()
