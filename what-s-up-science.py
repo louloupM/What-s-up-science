@@ -17,9 +17,11 @@ import os
 import docx2txt
 
 import nltk
+from nltk.corpus import stopwords 
 import numpy as np
 import pandas as pd
 from rake_nltk import Rake
+
 
 
 
