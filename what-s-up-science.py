@@ -57,7 +57,7 @@ if data is not None:
     titles = [each_string.lower() for each_string in titles]
     titles = [element.split() for element in titles]
 
-    titles = [re.sub(r'[^\w\s]',' ',word) for word in titles]
+    titles = [re.sub(r'[^\w\s]',' ',str(word)) for word in titles]
     titles = [word for word in titles if word not in stopwords.words('english')]
     titles = Counter(titles)
     
