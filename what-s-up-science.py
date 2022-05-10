@@ -85,7 +85,7 @@ if data is not None:
     plt.gca().invert_yaxis()
     plt.tick_params(axis='x')
     plt.tick_params(axis='y')
-    plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
+    plt.bar(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
 
     row1col2.pyplot()
     
