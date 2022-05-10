@@ -71,9 +71,9 @@ if data is not None:
     df = pd.DataFrame(journals_occurence)    
     df.columns = ['A', 'B']
     st.write(df)
+    df['A'] = df['A'].fillna(0)
+    df['A'] = [item[:40] for item in df['A']]
 
-           
-    df['A'] = [item='ok' for str('nan') in df['A']]
 
     plt.imshow(wordcloud)
     plt.axis("off")
