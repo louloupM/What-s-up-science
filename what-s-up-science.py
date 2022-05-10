@@ -31,6 +31,8 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 url='https://raw.githubusercontent.com/louloupM/what-s-up-science/main/Journal%20List.csv'
 df_journal_list = pd.read_csv(url)
 
+data = st.file_uploader("Upload a Dataset", type=["csv"])  
+
 st.set_option('deprecation.showPyplotGlobalUse', False)
 st.set_page_config(layout="wide")
 st.markdown("<h1 style='text-align: center; color: Black;'>What's up Science ?</h1>", unsafe_allow_html=True)
@@ -45,7 +47,6 @@ row2col1, row2col2, row2col3, row2col4 = st.columns(4)
 row3col1, row3col2 = st.columns(2)
 
 
-data = st.file_uploader("Upload a Dataset", type=["csv"])     
     
 if data is not None:
     st.write('Please wait : file being processed...')
