@@ -66,8 +66,7 @@ if data is not None:
     dg.columns = ['A', 'B']
     
     journal = library['Source title'].to_list()
-    st.write(journal)
-    journal = [item[:50] for item in journal]
+
     journals_occurence = Counter(journal).most_common()
     df = pd.DataFrame(journals_occurence)
     df.columns = ['A', 'B']
