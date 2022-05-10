@@ -58,11 +58,8 @@ if data is not None:
     titles = Counter(titles)
 
     keywords = titles.most_common(20)
-    
 
-    
-    word_cloud_dict = titles
-    wordcloud = WordCloud(background_color = 'white',width=1000, height=500, max_words = 20).generate_from_frequencies(word_cloud_dict)           
+    wordcloud = WordCloud(background_color = 'white',width=1000, height=500, max_words = 20).generate_from_frequencies(titles)           
     plt.imshow(wordcloud)
     plt.axis("off")
     row1col1.pyplot()
