@@ -70,6 +70,7 @@ if data is not None:
     journals_occurence = Counter(journal).most_common()
     df = pd.DataFrame(journals_occurence)
     df.columns = ['A', 'B']
+    st.write(df)
 
     plt.imshow(wordcloud)
     plt.axis("off")
