@@ -55,7 +55,7 @@ if data is not None:
     library = pd.read_csv(data)
     titles = library['Title'].to_list()    
     titles = [each_string.lower() for each_string in titles]
-    titles = [str(element).split() for element in titles]
+    titles = [element.split() for element in titles]
     st.write(titles)
     
     titles = [re.sub(r'[^\w\s]',' ',word) for word in titles]
