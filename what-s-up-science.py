@@ -61,7 +61,7 @@ if data is not None:
     wordcloud = WordCloud(background_color = 'white', width=1000, height=450, max_words = 20).generate_from_frequencies(titles)           
     plt.imshow(wordcloud)
     plt.axis("off")
-    row1col1.pyplot()
+    row1col1.pyplot(use_container_width=True)
     
 
     
@@ -75,7 +75,7 @@ if data is not None:
     plt.tick_params(axis='y')
     plt.bar(x, y, label = 'Bar', color = 'lightskyblue')
 
-    row1col2.pyplot()
+    row1col2.pyplot(use_container_width=True,)
     
     
     journal = library['Journal'].to_list()
@@ -90,7 +90,7 @@ if data is not None:
     plt.tick_params(axis='y')
     plt.barh(x, y, label = 'Bar', color = 'lightskyblue')
 
-    row1col3.pyplot()
+    row1col3.pyplot(use_container_width=True,)
     
     
     
