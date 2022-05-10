@@ -31,12 +31,13 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 url='https://raw.githubusercontent.com/louloupM/what-s-up-science/main/Journal%20List.csv'
 df_journal_list = pd.read_csv(url)
 
-data = st.file_uploader("Upload a Dataset", type=["csv"])  
+
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 st.set_page_config(layout="wide")
 st.markdown("<h1 style='text-align: center; color: Black;'>What's up Science ?</h1>", unsafe_allow_html=True)
 header = st.container()
+data = st.file_uploader("Upload a Dataset", type=["csv"])  
 wordcloud_material = st.container()
 wordcloud_process = st.container()
 graph_pie = st.container()
