@@ -54,13 +54,21 @@ if data is not None:
     titles = str(titles).split()
     titles = [each_string.lower() for each_string in titles]
     titles = [word for word in titles if word not in stopwords.words('english')]
-
     titles = Counter(titles)
-
     keywords = titles.most_common(20)
-
     wordcloud = WordCloud(background_color = 'white',width=1000, height=500, max_words = 20).generate_from_frequencies(titles)           
     plt.imshow(wordcloud)
     plt.axis("off")
     row1col1.pyplot()
+    
+    journal = library['Journal'].to_list()
+    for line in journal:
+        line = line.splitlines()
+        line = [element for item in line for element in item.split(', ')]
+        line = [x.strip() for x in line]
+        line = list(filter(None, line))
+        for element in line:
+            journals.append(element) 
+    
+    row1col3.markdown("<h1 style='text-align: center; color: White;'>Space</h1>", unsafe_allow_html=True)
             
