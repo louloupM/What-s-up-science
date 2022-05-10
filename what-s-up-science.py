@@ -62,6 +62,7 @@ if data is not None:
     row1col1.pyplot()
     
     journal = library['Journal'].to_list()
+    st.write(journal)
     journals = []
     for line in journal:
         line = line.splitlines()
@@ -71,5 +72,5 @@ if data is not None:
         for element in line:
             journals.append(element) 
     
-    row1col3.markdown("<h1 style='text-align: center; color: White;'>Space</h1>", unsafe_allow_html=True)
+    row1col2.markdown("<h1 style='text-align: center; color: White;'>Space</h1>", unsafe_allow_html=True)
             
