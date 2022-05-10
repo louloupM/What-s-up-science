@@ -56,13 +56,12 @@ if data is not None:
     titles = [word for word in titles if word not in stopwords.words('english')]
 
     titles = Counter(titles)
-    st.write(titles)
 
     keywords = titles.most_common(20)
     
 
     
-    word_cloud_dict = keywords
+    word_cloud_dict = titles
     wordcloud = WordCloud(background_color = 'white',width=1000, height=500, max_words = 40).generate_from_frequencies(word_cloud_dict)           
     plt.imshow(wordcloud)
     plt.axis("off")
