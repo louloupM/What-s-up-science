@@ -71,7 +71,7 @@ if data is not None:
     df = pd.DataFrame(journals_occurence)    
     df.columns = ['A', 'B']
     df['A'] = df['A'].fillna('None')
-    df['A'] = [item[:40] for item in df['A']]
+    df['A'] = [item[:50] for item in df['A']]
 
 
     plt.imshow(wordcloud)
