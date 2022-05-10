@@ -23,6 +23,7 @@ from rake_nltk import Rake
 from matplotlib import pyplot as plt
 import plotly.express as px
 import pycountry
+import string
 
 
 
@@ -55,6 +56,7 @@ if data is not None:
     titles = library['Title'].to_list()
     titles = str(titles).split()
     titles = [each_string.lower() for each_string in titles]
+    titles = [word.strip(string.punctuation) for word in titles]
     titles = [word for word in titles if word not in stopwords.words('english')]
     titles = Counter(titles)
     keywords = titles.most_common(20)
