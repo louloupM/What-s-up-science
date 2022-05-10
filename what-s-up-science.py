@@ -98,7 +98,7 @@ if data is not None:
     plt.barh(x2, y2, label = 'Bar', color = 'lightskyblue')
     row1col3.pyplot(use_container_width=True,)
     
-    st.markdown("<h1 style='text-align: center;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
+    st.markdown("<i style='text-align: center;font-size:20px; color: Black;'>"+str(citation)+" total citations</i>", unsafe_allow_html=True)   
     
     
     Year = []
