@@ -52,7 +52,7 @@ choice = st.sidebar.selectbox("Menu",menu)
 
 
 if choice == 'Home':
-    data = st.file_uploader("Upload a Dataset", type=["docx"])     
+    data = st.file_uploader("Upload a Dataset", type=["csv"])     
     
     if data is not None:
         st.write('Please wait : file being processed...')
