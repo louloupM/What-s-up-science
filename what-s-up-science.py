@@ -51,8 +51,11 @@ data = st.file_uploader("Upload a Dataset", type=["csv"])
     
 if data is not None:
     st.write('Please wait : file being processed...')
-    data2 = pd.read_csv(data)
-    st.write(data2)
+    library = pd.read_csv(data)
+    
+    test = library['Title'].astype(str)
+    
+    st.write(test)
             
 
 
