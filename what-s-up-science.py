@@ -46,9 +46,7 @@ wordcloud_process = st.container()
 graph_pie = st.container()
 journals_list = st.container()
 row1col1, row1col2, row1col3 = st.columns([6,1,6])
-wordcloudrow2col1, wordcloudrow2col2, wordcloudrow2col3 = st.columns([6,1,6])
-row2col1, row2col2, row2col3, row2col4 = st.columns(4)
-row3col1, row3col2 = st.columns(2)
+row2 = st.container()
  
     
 if data is not None:    
@@ -140,5 +138,5 @@ if data is not None:
                          projection="natural earth")
 
 
-    fig.show()
+    row2.fig.show()
 
