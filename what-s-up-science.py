@@ -80,8 +80,8 @@ if data is not None:
     year_occurence = Counter(year).most_common()
     dg = pd.DataFrame(year_occurence)
     dg.columns = ['A', 'B']
-    x = dg.loc[:20,'A'].values
-    y = dg.loc[:20,'B'].values
+    x = dg.loc[:50,'A'].values
+    y = dg.loc[:50,'B'].values
     plt.gca().invert_yaxis()
     plt.tick_params(axis='x')
     plt.tick_params(axis='y')
