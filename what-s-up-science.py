@@ -52,6 +52,7 @@ if data is not None:
     library = pd.read_csv(data)
     titles = library['Title'].to_list()
     titles = ' '.join(titles)
+    titles = Counter(titles)
 
     keywords = titles.most_common(10)
     
