@@ -54,9 +54,10 @@ row2 = st.container()
 if data is not None:    
     library = pd.read_csv(data)
     titles = library['Title'].to_list()
+    titles = [re.sub(r'[^\w\s]',' ',word) for word in titles]
     titles = str(titles).split()
     titles = [each_string.lower() for each_string in titles]
-    titles = [re.sub(r'[^\w\s]',' ',word) for word in titles]
+    
     titles = [word for word in titles if word not in stopwords.words('english')]
     titles = Counter(titles)
     keywords = titles.most_common(20)
