@@ -75,5 +75,5 @@ if data is not None:
     plt.tick_params(axis='y', labelsize=14)
     plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
 
-    row1col2.pyplot()
+    row1col3.pyplot()
             
