@@ -134,7 +134,7 @@ if data is not None:
     print(dc)
 
     fig = px.scatter_geo(dc, title = "WorldMap Ptoleme", locations="iso_alpha",
-                         hover_name="country", size='pop', size_max = 75, color ="country",
+                         hover_name="country", size='pop', size_max = 10, color ="country",
                          projection="natural earth")
 
 
