@@ -53,6 +53,10 @@ if data is not None:
     titles = library['Title'].to_list()
     titles = str(titles).split()
     st.write(titles)
+    
+
+    titles = [each_string.lower() for each_string in titles]
+    titles = [word for word in titles if word not in stopwords.words('english')]
 
 
 
