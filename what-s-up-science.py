@@ -82,7 +82,7 @@ if data is not None:
     df.columns = ['A', 'B']
     x = df.loc[:20,'A'].values
     y = df.loc[:20,'B'].values
-
+    plt.gca().invert_yaxis()
     plt.tick_params(axis='x')
     plt.tick_params(axis='y')
     plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
