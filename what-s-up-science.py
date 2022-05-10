@@ -53,7 +53,7 @@ if data is not None:
     titles = library['Title'].to_list()
     st.write(titles)
     r = Rake()
-    keywords = r.extract_keywords_from_text(str(titles))
+    keywords = r.extract_keywords_from_text(titles)
     
     st.write(keywords)
             
