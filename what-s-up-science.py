@@ -138,5 +138,5 @@ if data is not None:
                          projection="natural earth")
 
 
-    row2.fig.show()
+    row2.fig
 
