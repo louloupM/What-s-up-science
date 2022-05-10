@@ -50,8 +50,8 @@ data = st.file_uploader("Upload a Dataset", type=["csv"])
 if data is not None:
     st.write('Please wait : file being processed...')
     library = pd.read_csv(data)
-    
-    titles = library['Title'].astype(str)
+    titles = library['Title'].to_list()
+    st.write(titles)
     r = Rake()
     keywords = r.extract_keywords_from_text(str(titles))
     
