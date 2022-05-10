@@ -76,8 +76,6 @@ if data is not None:
     
     citation = library['Cited by'].sum() 
     citation = round(citation)
-    st.markdown("<h1 style='text-align: center;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)
-
 
     plt.imshow(wordcloud)
     plt.axis("off")
@@ -100,6 +98,7 @@ if data is not None:
     plt.barh(x2, y2, label = 'Bar', color = 'lightskyblue')
     row1col3.pyplot(use_container_width=True,)
     
+    st.markdown("<h1 style='text-align: center;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
     
     
     Year = []
