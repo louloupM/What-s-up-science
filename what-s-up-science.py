@@ -70,8 +70,7 @@ if data is not None:
     journals_occurence = Counter(journal).most_common()
     df = pd.DataFrame(journals_occurence)    
     df.columns = ['A', 'B']
-    df['A'] = [item[:20] for item in df['A']]
-    st.write(df)
+    df['A'] = [item[:40] for item in df['A']]
 
     plt.imshow(wordcloud)
     plt.axis("off")
