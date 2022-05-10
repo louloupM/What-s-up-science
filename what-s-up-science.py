@@ -54,7 +54,7 @@ row2 = st.container()
 if data is not None:    
     library = pd.read_csv(data)
     st.write(library)
-    library = [re.sub(r'[^\w\s]',' ',word) for word in library]
+    library['Title'] = [re.sub(r'[^\w\s]',' ',word) for word in library['Title']]
     titles = library['Title'].to_list()    
     titles = str(titles).split()
     
