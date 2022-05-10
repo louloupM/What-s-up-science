@@ -52,9 +52,8 @@ if data is not None:
     library = pd.read_csv(data)
     titles = library['Title'].to_list()
     titles = ' '.join(titles)
-    st.write(titles)
-    r = Rake()
-    keywords = r.extract_keywords_from_text(titles)
+
+    keywords = titles.most_common(10)
     
     st.write(keywords)
             
