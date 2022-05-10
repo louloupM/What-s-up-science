@@ -63,20 +63,7 @@ if data is not None:
     plt.axis("off")
     row1col1.pyplot()
     
-    journal = library['Journal'].to_list()
-    journal = [item[:50] for item in journal]
-    journals_occurence = Counter(journal).most_common()
-    df = pd.DataFrame(journals_occurence)
-    df.columns = ['A', 'B']
-    x = df.loc[:20,'A'].values
-    y = df.loc[:20,'B'].values
-    plt.gca().invert_yaxis()
-    plt.tick_params(axis='x')
-    plt.tick_params(axis='y')
-    plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
 
-    row1col3.pyplot()
-    row2.markdown("<h1 style='text-align: center; color: Black;'>Coucou</h1>", unsafe_allow_html=True)
     
     year = library['Year'].to_list()
     year_occurence = Counter(year).most_common()
@@ -91,6 +78,19 @@ if data is not None:
     row1col2.pyplot()
     
     
+    journal = library['Journal'].to_list()
+    journal = [item[:50] for item in journal]
+    journals_occurence = Counter(journal).most_common()
+    df = pd.DataFrame(journals_occurence)
+    df.columns = ['A', 'B']
+    x = df.loc[:20,'A'].values
+    y = df.loc[:20,'B'].values
+    plt.gca().invert_yaxis()
+    plt.tick_params(axis='x')
+    plt.tick_params(axis='y')
+    plt.barh(x, y, height=0.5, label = 'Bar', color = 'lightskyblue')
+
+    row1col3.pyplot()
     
     
     
