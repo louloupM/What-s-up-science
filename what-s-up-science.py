@@ -16,7 +16,7 @@ import requests
 import os
 import docx2txt
 
-
+import nltk
 import numpy as np
 import pandas as pd
 from rake_nltk import Rake
