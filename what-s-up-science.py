@@ -77,8 +77,8 @@ if data is not None:
     
     x1 = dg.loc[:50,'A'].values
     y1 = dg.loc[:50,'B'].values
-    plt.tick_params(axis='x1')
-    plt.tick_params(axis='y1')
+    plt.tick_params(axis='x')
+    plt.tick_params(axis='y')
     plt.bar(x1, y1,edgecolor = "none", label = 'Bar', color = 'lightskyblue')
 
     row1col2.pyplot(use_container_width=True,)
