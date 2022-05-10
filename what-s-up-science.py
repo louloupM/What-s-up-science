@@ -148,7 +148,6 @@ if data is not None:
 
     dc = dc.rename({0: 'pop'}, axis=1)
 
-    print(dc)
 
     dc[['country', 'iso_alpha']] = dc['index'].str.split(',', expand=True)
 
@@ -161,7 +160,6 @@ if data is not None:
     #or
     dc=dc.reindex(columns=new_cols)
 
-    print(dc)
 
     fig = px.scatter_geo(dc, locations="iso_alpha",
                          hover_name="country", size='pop', size_max = 25, color ="country",
