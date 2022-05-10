@@ -57,7 +57,7 @@ if data is not None:
     titles = [word for word in titles if word not in stopwords.words('english')]
     titles = Counter(titles)
     keywords = titles.most_common(20)
-    wordcloud = WordCloud(background_color = 'white',width=1000, height=450, max_words = 20).generate_from_frequencies(titles)           
+    wordcloud = WordCloud(background_color = 'white', max_words = 20).generate_from_frequencies(titles)           
     plt.imshow(wordcloud)
     plt.axis("off")
     row1col1.pyplot()
