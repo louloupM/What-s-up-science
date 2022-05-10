@@ -53,7 +53,6 @@ row2 = st.container()
     
 if data is not None:    
     library = pd.read_csv(data)
-    st.write(library)
     titles = library['Title'].to_list()    
     titles = str(titles).split()
     titles = [each_string.lower() for each_string in titles]
