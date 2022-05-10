@@ -71,7 +71,7 @@ if data is not None:
     df = pd.DataFrame(journals_occurence)    
     df.columns = ['A', 'B']
     st.write(df)
-    df['A'] = [item[:40] for item in df['A']]
+    df['A'] = [item[0:40] for item in df['A']]
 
     plt.imshow(wordcloud)
     plt.axis("off")
