@@ -62,6 +62,7 @@ if data is not None:
     row1col1.pyplot()
     
     journal = library['Journal'].to_list()
+    journals = []
     for line in journal:
         line = line.splitlines()
         line = [element for item in line for element in item.split(', ')]
