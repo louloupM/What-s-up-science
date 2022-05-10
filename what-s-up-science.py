@@ -55,7 +55,7 @@ if data is not None:
     library = pd.read_csv(data)
     
     titles = library['Title'].astype(str)
-    keywords = r.extract_keywords_from_text(<titles>)
+    keywords = r.extract_keywords_from_text('titles')
     
     st.write(keywords)
             
