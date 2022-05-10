@@ -61,7 +61,6 @@ if data is not None:
     
     
     titles = [re.sub(r'[^\w\s]',' ',word) for word in titles]
-    st.write(titles)
     titles = [word for word in titles if word not in stopwords.words('english')]
     titles = Counter(titles)
     
