@@ -78,7 +78,7 @@ if data is not None:
     df['A'] = [item[:40] for item in df['A']]
     
     citation = library['Cited by'].dropna(how='all').sum() 
-    
+    st.write(citation)
     citation = round(citation)
 
     plt.imshow(wordcloud)
