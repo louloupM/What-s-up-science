@@ -64,7 +64,7 @@ if data is not None:
     titles = Counter(titles)
     
     keywords = titles.most_common(20)
-    wordcloud = WordCloud(background_color = 'white', width=1000, height=450, max_words = 20).generate_from_frequencies(titles)           
+    wordcloud = WordCloud(background_color = 'white', width=1000, height=450, max_words = 40).generate_from_frequencies(titles)           
     
     year = library['Year'].to_list()
     year_occurence = Counter(year).most_common()
