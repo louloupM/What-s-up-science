@@ -109,7 +109,6 @@ if data is not None:
     
     publishers=[]
     for element in journals:
-        element = re.sub('&','and',element)
         publication = element.lower()
         new_df = df_journal_list
         new_df['Title'] = new_df['Title'].str.lower()
