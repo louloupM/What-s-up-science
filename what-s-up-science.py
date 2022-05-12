@@ -118,7 +118,7 @@ if data is not None:
         
         st.write(df)
         
-        domain = df.iat[0,4]
+        domain = df.iat[1,4]
         if str(domain) == 'nan':
             domain = 'Unknown'
                     # st.write(element)                              
