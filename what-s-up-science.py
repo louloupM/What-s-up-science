@@ -134,7 +134,7 @@ if data is not None:
     df.columns = ['Publisher', 'Occurence']
     df.groupby(['Publisher']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
 
-    row2col1.pyplot(use_container_width=True)
+    row2col1.pyplot()
      
     #Domain code
     
@@ -158,7 +158,7 @@ if data is not None:
     df.columns = ['Publisher', 'Occurence']
     df.groupby(['Publisher']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
 
-    row2col3.pyplot(use_container_width=True)
+    row2col3.pyplot()
     
     
     
