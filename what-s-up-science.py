@@ -111,7 +111,7 @@ if data is not None:
     iso_alpha = []
     count = []
 
-    Affiliations = df['Affiliations'].tolist()
+    Affiliations = library['Affiliations'].tolist()
     for index, item in enumerate(Affiliations):
         if str(item) == str('nan'):
             pass
