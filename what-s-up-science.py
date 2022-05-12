@@ -56,6 +56,7 @@ if data is not None:
     titles = library['Title'].to_list()   
     titles = [each_string.lower() for each_string in titles]
     titles = [y for x in titles for y in x.split(' ')]
+    titles = [s for s in titles if re.search(r'\w+', s)]
     titles = [re.sub(r'\([^)]*\)', '',str(word)) for word in titles]
 
 
