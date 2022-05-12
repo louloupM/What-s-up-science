@@ -107,7 +107,8 @@ if data is not None:
     #Domain code
     
     
-    Affiliations = library['Affiliations'].tolist()
+    journals = df['A'].tolist()
+    st.write(journals)
     for index, item in enumerate(df_journal_list):
        st.write(index)
 
