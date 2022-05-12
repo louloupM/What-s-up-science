@@ -49,7 +49,7 @@ graph_pie = st.container()
 journals_list = st.container()
 row1col1, row1col2, row1col3 = st.columns([7,4.7,7])
 row2 = st.container()
-row3 = st.columns(3)
+row3col1, row3col2, row3col3 = st.columns([6,1,6])
 
  
     
@@ -129,7 +129,7 @@ if data is not None:
     st.write(df)
     df.groupby(['Journals']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
         
-    row3.pyplot()
+    row3col1.pyplot()
      
 
 
