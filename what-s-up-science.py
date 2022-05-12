@@ -31,7 +31,7 @@ import string
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 
-url='https://raw.githubusercontent.com/louloupM/what-s-up-science/main/Scientific%20journal%20list%201.1.csv'
+url='https://raw.githubusercontent.com/louloupM/what-s-up-science/main/Scientific%20journal%20list%201.2.csv'
 df_journal_list = pd.read_csv(url)
 
 
@@ -136,7 +136,33 @@ if data is not None:
 
     row2col3.pyplot()
      
+    #Domain code
+    
+    publishers=[]
+    for element in journals:
+        if str(element) == 'nan':
+            pass
+        else:
+            publication = element.lower()
+            new_df = df_journal_list
+            new_df['Title'] = new_df['Title'].str.lower()
+            df = new_df[new_df['Title']==publication]
+            if df.empty:
+                pass
+            else:
+                publisher = df.iat[0,4]
+                publishers.append(publisher)
+    
+    publishers_occurence = Counter(publishers).most_common(10)
+    df = pd.DataFrame(publishers_occurence)
+    df.columns = ['Publisher', 'Occurence']
+    df.groupby(['Publisher']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
 
+    row2col1.pyplot()
+    
+    
+    
+    
 
     
     
