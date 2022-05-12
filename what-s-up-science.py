@@ -133,7 +133,7 @@ if data is not None:
     df = pd.DataFrame(publishers_occurence)
     df.columns = ['Publisher', 'Occurence']
     df.groupby(['Publisher']).sum().plot(kind='pie', subplots=True,title = 'Top 10 Publishers', legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
-   
+    ax.set_title(fontdict={'fontsize': 8, 'fontweight': 'medium'})
     row2col3.pyplot()
      
 
