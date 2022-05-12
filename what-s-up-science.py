@@ -126,6 +126,7 @@ if data is not None:
     domains_occurence = Counter(domains).most_common()
     df = pd.DataFrame(domains_occurence)
     df.columns = ['Journals', 'Occurence']
+    st.write(df)
     df.groupby(['Journals']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
         
     row3.pyplot()
