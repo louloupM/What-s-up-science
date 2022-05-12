@@ -110,6 +110,7 @@ if data is not None:
     domains=[]
     journals = df['A'].to_list() 
     for element in journals:
+        st.write(element)
         element = re.sub('&','and',element)
         publication = element.lower()
         new_df = df_journal_list
