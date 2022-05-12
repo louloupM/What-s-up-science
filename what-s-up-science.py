@@ -57,7 +57,7 @@ if data is not None:
     titles = [each_string.lower() for each_string in titles]
     titles = [y for x in titles for y in x.split(' ')]    
     titles = [re.sub(r'\([^)]*\)', '',str(word)) for word in titles]
-    titles = [re.sub(r'\(|\)|\'',' ',str(word),flags=re.MULTILINE) for word in titles]
+    titles = [re.sub(r'\(|\)|\'|\:',' ',str(word),flags=re.MULTILINE) for word in titles]
     titles = [word for word in titles if word not in stopwords.words('english')]
     titles = filter (lambda s:any([c.isalpha() for c in s]), titles)
     titles = Counter(titles)
