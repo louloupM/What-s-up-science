@@ -106,10 +106,14 @@ if data is not None:
     
     #Domain code
 
-
-    for element in df['A'].tolist():
-        if df_journal_list['Title'].str.contains('element'):
-            print ("Mel is there")
+    journals = df['A'].to_list() 
+    for element in journals:
+        element = re.sub('&','and',element)
+        publication = element.lower()
+        new_df = df_journal_list
+        new_df['Title'] = new_df['Title'].str.lower()
+        df = new_df[new_df['Title']==publication]
+    st.write(df)
 
     
     
