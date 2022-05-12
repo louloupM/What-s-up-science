@@ -111,6 +111,8 @@ if data is not None:
     domains=[]
     for element in journals:
         st.write(element)
+        if str(element) == 'nan':
+            pass
         element = re.sub('&','and',element)
         publication = element.lower()
         new_df = df_journal_list
