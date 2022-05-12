@@ -109,7 +109,7 @@ if data is not None:
     
     Affiliations = library['Affiliations'].tolist()
     for index, item in enumerate(df_journal_list):
-       st.write(item)
+       st.write(index)
 
     
     
