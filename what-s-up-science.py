@@ -48,8 +48,7 @@ wordcloud_process = st.container()
 graph_pie = st.container()
 journals_list = st.container()
 row1col1, row1col2, row1col3 = st.columns([7,4.7,7])
-row2 = st.container()
-row3col1, row3col2, row3col3 = st.columns([6,1,3])
+row2col1, row2col2, row2col3 = st.columns([6,3,6])
 
  
     
@@ -102,7 +101,7 @@ if data is not None:
     plt.barh(x2, y2, label = 'Bar', color = 'lightskyblue')
     row1col3.pyplot(use_container_width=True,)
     
-    st.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
+    row2col2.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
     
     
     #Publisher code
@@ -127,7 +126,7 @@ if data is not None:
     df.columns = ['Publisher', 'Occurence']
     df.groupby(['Publisher']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
         
-    row3col3.pyplot()
+    row2col3.pyplot()
      
 
 
@@ -179,5 +178,5 @@ if data is not None:
 
 
 
-    row3col1.plotly_chart(fig, use_container_width=True, sharing="streamlit")
+    st.plotly_chart(fig, use_container_width=True, sharing="streamlit")
 
