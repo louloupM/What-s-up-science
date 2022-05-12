@@ -33,7 +33,7 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 url='https://raw.githubusercontent.com/louloupM/what-s-up-science/main/Scientific%20journal%20list%201.0.csv'
 df_journal_list = pd.read_csv(url)
-st.write(df_journal_list)
+
 
 
 
