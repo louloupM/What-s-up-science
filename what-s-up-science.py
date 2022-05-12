@@ -77,6 +77,7 @@ if data is not None:
     df = pd.DataFrame(journals_occurence)    
     df.columns = ['A', 'B']
     df['A'] = df['A'].fillna('None')
+    df_journal['Title'] = df['A']
     df['A'] = [item[:40] for item in df['A']]
     
     citation = library['Cited by'].sum() 
@@ -108,7 +109,7 @@ if data is not None:
     #Domain code
     
     domains=[]
-    journals = df['A'].to_list()
+    journals = df_journal['Title'].to_list()
     st.write(journals)
     for element in journals:
         element = re.sub('&','and',element)
