@@ -59,7 +59,7 @@ if data is not None:
     titles = [re.sub(r'\([^)]*\)', '',str(word)) for word in titles]
 
 
-    titles = [re.sub(r'[^\w\s]',' ',str(word)) for word in titles]
+    titles = [re.sub(r'\(|\)\'',' ',str(word)) for word in titles]
     titles = [word for word in titles if word not in stopwords.words('english')]
     titles = Counter(titles)
     
