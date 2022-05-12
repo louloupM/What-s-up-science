@@ -111,59 +111,42 @@ if data is not None:
     iso_alpha = []
     count = []
 
-    for index, row in library.iterrows():
-        if str(row['Affiliations']) == str('nan'):
-            pass
-        else:
-            x = row['Affiliations'].split(", ")
+    Affiliations = df['Affiliations'].tolist()
+    for index, item in enumerate(Affiliations):
+    if str(item) == str('nan'):
+        pass
+    else:
+        item = re.sub(r'[^\w\s]',' ',item)
+        item = ' '.join(dict.fromkeys(item.split()))
+        Affiliations[index] = item
 
-            country = x[-1]
-
-
-        try :
-            code = pycountry.countries.search_fuzzy(country)
-            try:
-                code = code[0].alpha_3
-                iso_alpha.append(code)
-                Country.append(country)
-                Year.append(row['Year'])
-            except AttributeError:
-                pass
-        except LookupError:
-            pass
+    Country=[]
+    Pop = []
+    iso_alpha = []
+    for country in pycountry.countries:
+     if country.name in str(Affiliations):
+        Pop.append(str(Affiliations).count(country.name))
+        Country.append(country.name)
 
 
-    d = {'country':Country,'year':Year,'iso_alpha':iso_alpha}
+    for item in Country:
+        code = pycountry.countries.search_fuzzy(item)
+        code = code[0].alpha_3
+        iso_alpha.append(code)
 
 
 
-    # Calling DataFrame constructor on list
+
+
+    d = {'Country':Country,'iso_alpha':iso_alpha,'Pop':Pop}
     df = pd.DataFrame(d)
-    del df['year']
-
-    c = Counter(list(zip(df.country, df.iso_alpha)))
-
-    dc = pd.DataFrame.from_dict(c, orient='index').reset_index()
-    dc['index'] = dc['index'].astype(str)
-
-    dc = dc.rename({0: 'pop'}, axis=1)
 
 
-    dc[['country', 'iso_alpha']] = dc['index'].str.split(',', expand=True)
-
-    del dc["index"]
-    dc = dc.replace({',|\'|\(|\)|\ ':''}, regex=True)
-
-    #Move last Column to First Column
-    new_cols = ["country","iso_alpha","pop"]
-    dc=dc[new_cols]
-    #or
-    dc=dc.reindex(columns=new_cols)
+    fig = px.scatter_geo(df, title = "WorldMap Ptoleme", locations="iso_alpha",
+                     hover_name="Country", size='Pop', size_max = 75, color ="Country",
+                     projection="natural earth")
 
 
-    fig = px.scatter_geo(dc, locations="iso_alpha",
-                         hover_name="country", size='pop', size_max = 25, color ="country",
-                         projection="natural earth")
 
 
     st.plotly_chart(fig, use_container_width=True, sharing="streamlit")
