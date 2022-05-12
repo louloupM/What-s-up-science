@@ -56,7 +56,7 @@ if data is not None:
     titles = library['Title'].to_list()   
     titles = [each_string.lower() for each_string in titles]
     titles = [y for x in titles for y in x.split(' ')]
-    titles = filter (lambda s:any([c.isalnum() for c in s]), titles)
+    titles = filter (lambda s:any([c.isalpha() for c in s]), titles)
     titles = [re.sub(r'\([^)]*\)', '',str(word)) for word in titles]
 
 
