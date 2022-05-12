@@ -124,9 +124,9 @@ if data is not None:
     Pop = []
     iso_alpha = []
     for country in pycountry.countries:
-     if country.name in str(Affiliations):
-        Pop.append(str(Affiliations).count(country.name))
-        Country.append(country.name)
+        if country.name in str(Affiliations):
+            Pop.append(str(Affiliations).count(country.name))
+            Country.append(country.name)
 
 
     for item in Country:
