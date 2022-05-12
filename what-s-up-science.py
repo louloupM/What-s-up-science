@@ -124,13 +124,13 @@ if data is not None:
         domain = domain.replace('(','').replace(')','').replace(' ; ',', ').replace('\t','')
         domains.append(domain)
          
-        domains_occurence = Counter(domains).most_common()
-        df = pd.DataFrame(domains_occurence)
-        df.columns = ['Journals', 'Occurence']
-        df.groupby(['Journals']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
+    domains_occurence = Counter(domains).most_common()
+    df = pd.DataFrame(domains_occurence)
+    df.columns = ['Journals', 'Occurence']
+    df.groupby(['Journals']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
         
-        row3.pyplot()
-      
+    row3.pyplot()
+     
 
 
     
