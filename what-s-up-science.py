@@ -117,13 +117,12 @@ if data is not None:
         df = new_df[new_df['Title']==publication]
 
         
-        domain = df.iat[0,4]
+        domain = df.iat[0,3]
         st.write(domain)
         if str(domain) == 'nan':
             domain = 'Unknown'
                     # st.write(element)                              
-        domain = re.sub("([\(\[]).*?([\)\]])", "", str(domain))
-        domain = domain.replace('(','').replace(')','').replace(' ; ',', ').replace('\t','')
+        
         domains.append(domain)
     
     st.write(domains)
