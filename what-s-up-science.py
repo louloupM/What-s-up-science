@@ -91,9 +91,7 @@ if data is not None:
     plt.tick_params(axis='x')
     plt.tick_params(axis='y')
     plt.bar(x1, y1,edgecolor = "none", label = 'Bar', color = 'lightskyblue')
-    row1col2.pyplot(use_container_width=True,)
-    
-    
+    row1col2.pyplot(use_container_width=True,)    
 
     x2 = df.loc[:20,'A'].values
     y2 = df.loc[:20,'B'].values
@@ -104,6 +102,18 @@ if data is not None:
     row1col3.pyplot(use_container_width=True,)
     
     st.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
+    
+    
+    #Domain code
+    
+    
+    Affiliations = library['Affiliations'].tolist()
+    for index, item in enumerate(df_journal_list):
+       st.write(item)
+
+    
+    
+    #World Map code
     
     
     Year = []
