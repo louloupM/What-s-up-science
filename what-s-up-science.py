@@ -113,12 +113,12 @@ if data is not None:
 
     Affiliations = df['Affiliations'].tolist()
     for index, item in enumerate(Affiliations):
-    if str(item) == str('nan'):
-        pass
-    else:
-        item = re.sub(r'[^\w\s]',' ',item)
-        item = ' '.join(dict.fromkeys(item.split()))
-        Affiliations[index] = item
+        if str(item) == str('nan'):
+            pass
+        else:
+            item = re.sub(r'[^\w\s]',' ',item)
+            item = ' '.join(dict.fromkeys(item.split()))
+            Affiliations[index] = item
 
     Country=[]
     Pop = []
