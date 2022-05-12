@@ -72,12 +72,11 @@ if data is not None:
     dg = pd.DataFrame(year_occurence)
     dg.columns = ['A', 'B']
     
-    journal = library['Source title'].to_list()
-    journals_occurence = Counter(journal).most_common()
+    journals = library['Source title'].to_list()
+    journals_occurence = Counter(journals).most_common()
     df = pd.DataFrame(journals_occurence)    
     df.columns = ['A', 'B']
     df['A'] = df['A'].fillna('None')
-    journals = df['A'].to_list()
     df['A'] = [item[:40] for item in df['A']]
     
     citation = library['Cited by'].sum() 
