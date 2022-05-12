@@ -49,6 +49,7 @@ graph_pie = st.container()
 journals_list = st.container()
 row1col1, row1col2, row1col3 = st.columns([7,4.7,7])
 row2 = st.container()
+row3=st.columns
 
  
     
@@ -105,7 +106,8 @@ if data is not None:
     
     
     #Domain code
-
+    
+    domains=[]
     journals = df['A'].to_list() 
     for element in journals:
         element = re.sub('&','and',element)
@@ -113,7 +115,23 @@ if data is not None:
         new_df = df_journal_list
         new_df['Title'] = new_df['Title'].str.lower()
         df = new_df[new_df['Title']==publication]
-    st.write(df)
+        
+        domain = df.iat[0,3]
+        if str(domain) == 'nan':
+            domain = 'Unknown'
+                    # st.write(element)                              
+         domain = re.sub("([\(\[]).*?([\)\]])", "", str(domain))
+         domain = domain.replace('(','').replace(')','').replace(' ; ',', ').replace('\t','')
+         domains.append(domain)
+         
+         domains_occurence = Counter(domains).most_common()
+         df = pd.DataFrame(domains_occurence)
+         df.columns = ['Journals', 'Occurence']
+         df.groupby(['Journals']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
+        
+         row3.pyplot()
+      
+
 
     
     
