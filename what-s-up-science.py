@@ -108,7 +108,7 @@ if data is not None:
 
 
     for element in df['A'].tolist():
-       if element = df_journal_list['Title']:
+       if element == df_journal_list['Title']:
            st.write('coucou')
 
     
