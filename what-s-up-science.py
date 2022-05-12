@@ -124,7 +124,7 @@ if data is not None:
             new_df['Title'] = new_df['Title'].str.lower()
             df = new_df[new_df['Title']==publication]
             if df.empty:
-                publishers.append('Unknown')
+                pass
             else:
                 publisher = df.iat[0,3]
                 publishers.append(publisher)
