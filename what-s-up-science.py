@@ -106,7 +106,7 @@ if data is not None:
     st.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
     
     
-    #Domain code
+    #Publisher code
     
     publishers=[]
     for element in journals:
@@ -121,8 +121,8 @@ if data is not None:
             publisher = df.iat[0,3]
             publishers.append(publisher)
     
-    domains_occurence = Counter(domains).most_common()
-    df = pd.DataFrame(domains_occurence)
+    publishers_occurence = Counter(publishers).most_common()
+    df = pd.DataFrame(publishers_occurence)
     df.columns = ['Publisher', 'Occurence']
     df.groupby(['Publisher']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
         
