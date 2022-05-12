@@ -108,7 +108,8 @@ if data is not None:
     #Domain code
     
     domains=[]
-    journals = df['A'].to_list() 
+    journals = df['A'].to_list()
+    for element in journals:
         element = re.sub('&','and',element)
         publication = element.lower()
         new_df = df_journal_list
