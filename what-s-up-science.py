@@ -110,16 +110,13 @@ if data is not None:
     
     domains=[]
     for element in journals:
-        st.write(element)
-        if str(element) == 'nan':
-            pass
         element = re.sub('&','and',element)
         publication = element.lower()
         new_df = df_journal_list
         new_df['Title'] = new_df['Title'].str.lower()
         df = new_df[new_df['Title']==publication]
-
-        st.write(df)
+        if df.empty:
+            pass
         domain = df.iat[0,3]
         st.write(domain)
         domains.append(domain)
