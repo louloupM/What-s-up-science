@@ -129,7 +129,7 @@ if data is not None:
                 publisher = df.iat[0,3]
                 publishers.append(publisher)
     
-    publishers_occurence = Counter(publishers).most_common()
+    publishers_occurence = Counter(publishers).most_common(5)
     df = pd.DataFrame(publishers_occurence)
     df.columns = ['Publisher', 'Occurence']
     df.groupby(['Publisher']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
