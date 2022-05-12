@@ -123,7 +123,8 @@ if data is not None:
         domain = re.sub("([\(\[]).*?([\)\]])", "", str(domain))
         domain = domain.replace('(','').replace(')','').replace(' ; ',', ').replace('\t','')
         domains.append(domain)
-         
+    
+    st.write(domains)
     domains_occurence = Counter(domains).most_common()
     df = pd.DataFrame(domains_occurence)
     df.columns = ['Journals', 'Occurence']
