@@ -117,9 +117,10 @@ if data is not None:
         df = new_df[new_df['Title']==publication]
         if df.empty:
             st.write('empty')
-        domain = df.iat[0,3]
-        st.write(domain)
-        domains.append(domain)
+        else:
+            domain = df.iat[0,3]
+            st.write(domain)
+            domains.append(domain)
     
     st.write(domains)
     domains_occurence = Counter(domains).most_common()
