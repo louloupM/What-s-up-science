@@ -116,6 +116,8 @@ if data is not None:
         new_df['Title'] = new_df['Title'].str.lower()
         df = new_df[new_df['Title']==publication]
         
+        st.write(df)
+        
         domain = df.iat[0,3]
         if str(domain) == 'nan':
             domain = 'Unknown'
