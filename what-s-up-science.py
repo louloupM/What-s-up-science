@@ -121,9 +121,10 @@ if data is not None:
         st.write(domain)
         if str(domain) == 'nan':
             domain = 'Unknown'
-                    # st.write(element)                              
-        
-        domains.append(domain)
+            domains.append(domain)
+                           
+        else:
+            domains.append(domain)
     
     st.write(domains)
     domains_occurence = Counter(domains).most_common()
