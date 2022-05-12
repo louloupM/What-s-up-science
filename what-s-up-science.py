@@ -105,12 +105,11 @@ if data is not None:
     
     
     #Domain code
-    
-    
-    journals = df['A'].tolist()
-    st.write(journals)
-    for index, item in enumerate(df_journal_list):
-       st.write(index)
+
+
+    for element in df['A'].tolist():
+       if element = df_journal_list['Title']:
+           st.write('coucou')
 
     
     
