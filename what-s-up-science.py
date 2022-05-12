@@ -105,6 +105,10 @@ if data is not None:
         st.write('')
         st.write('')
         st.write('')
+        st.write('')
+        st.write('')
+        st.write('')
+        st.write('')
         st.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
     
     
