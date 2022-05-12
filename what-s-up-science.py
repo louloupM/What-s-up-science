@@ -109,15 +109,18 @@ if data is not None:
     
     publishers=[]
     for element in journals:
-        publication = element.lower()
-        new_df = df_journal_list
-        new_df['Title'] = new_df['Title'].str.lower()
-        df = new_df[new_df['Title']==publication]
-        if df.empty:
-            publishers.append('Unknown')
+        if str(element) == 'nan':
+            pass
         else:
-            publisher = df.iat[0,3]
-            publishers.append(publisher)
+            publication = element.lower()
+            new_df = df_journal_list
+            new_df['Title'] = new_df['Title'].str.lower()
+            df = new_df[new_df['Title']==publication]
+            if df.empty:
+                publishers.append('Unknown')
+            else:
+                publisher = df.iat[0,3]
+                publishers.append(publisher)
     
     publishers_occurence = Counter(publishers).most_common()
     df = pd.DataFrame(publishers_occurence)
