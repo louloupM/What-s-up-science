@@ -119,12 +119,7 @@ if data is not None:
         
         domain = df.iat[0,3]
         st.write(domain)
-        if str(domain) == 'nan':
-            domain = 'Unknown'
-            domains.append(domain)
-                           
-        else:
-            domains.append(domain)
+        domains.append(domain)
     
     st.write(domains)
     domains_occurence = Counter(domains).most_common()
