@@ -127,7 +127,7 @@ if data is not None:
     df.columns = ['Publisher', 'Occurence']
     df.groupby(['Publisher']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
         
-    row3col1.pyplot()
+    row3col3.pyplot()
      
 
 
@@ -179,5 +179,5 @@ if data is not None:
 
 
 
-    st.plotly_chart(fig, use_container_width=True, sharing="streamlit")
+    row3col1.plotly_chart(fig, use_container_width=True, sharing="streamlit")
 
