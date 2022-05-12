@@ -108,7 +108,7 @@ if data is not None:
     
     #Domain code
     
-    domains=[]
+    publishers=[]
     for element in journals:
         element = re.sub('&','and',element)
         publication = element.lower()
@@ -116,18 +116,15 @@ if data is not None:
         new_df['Title'] = new_df['Title'].str.lower()
         df = new_df[new_df['Title']==publication]
         if df.empty:
-            st.write('empty')
+            publishers.append('Unknown')
         else:
-            domain = df.iat[0,3]
-            st.write(domain)
-            domains.append(domain)
+            publisher = df.iat[0,3]
+            publishers.append(publisher)
     
-    st.write(domains)
     domains_occurence = Counter(domains).most_common()
     df = pd.DataFrame(domains_occurence)
-    df.columns = ['Journals', 'Occurence']
-    st.write(df)
-    df.groupby(['Journals']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
+    df.columns = ['Publisher', 'Occurence']
+    df.groupby(['Publisher']).sum().plot(kind='pie', subplots=True, legend= None, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
         
     row3col1.pyplot()
      
