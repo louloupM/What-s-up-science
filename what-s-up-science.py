@@ -178,7 +178,7 @@ if data is not None:
     df.groupby(['Publisher']).sum().plot(kind='pie',radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
     plt.legend(loc='upper left', fontsize=11)
     plt.margins(0,0)
-    row2col1.write("lol")
+    row2col1.markdown("<i style='text-align: center;font-style: italic;font-size:20px; color: Black;'>Top 10 Publishers</i>"
     row2col1.pyplot()
      
     #Domain code
