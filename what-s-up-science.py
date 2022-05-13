@@ -226,12 +226,7 @@ if data is not None:
     
     grid_response = AgGrid(
     library,
-    gridOptions=gridOptions,
-    data_return_mode='AS_INPUT', 
-    update_mode='MODEL_CHANGED', 
     fit_columns_on_grid_load=True,
-    theme='blue', #Add theme color to the table
-    enable_enterprise_modules=True,
     height=350, 
     width='100%',
     reload_data=True
