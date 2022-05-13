@@ -204,6 +204,7 @@ if data is not None:
     df = pd.DataFrame(publishers_occurence)
     df.columns = ['Publisher', 'Occurence']
     df.sort_values('Occurence')
+    st.write(df)
     df.groupby(['Publisher']).sum().plot(kind='pie', radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
     plt.legend(loc='upper right', fontsize=12)
     plt.margins(0,0)
