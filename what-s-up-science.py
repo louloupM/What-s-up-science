@@ -49,7 +49,7 @@ graph_pie = st.container()
 journals_list = st.container()
 row1col1, row1col2, row1col3 = st.columns([7,4.7,7])
 row2col1, row2col2, row2col3 = st.columns([3,6,3])
-row3 = st.container()
+row3col1, row3col2, row3col3 = st.columns([2,6,2])
 
  
     
@@ -202,5 +202,5 @@ if data is not None:
 
 
 
-    st.plotly_chart(fig, use_container_width=True, sharing="streamlit")
+    row3col2.plotly_chart(fig, use_container_width=True, sharing="streamlit")
 
