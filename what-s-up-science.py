@@ -48,7 +48,7 @@ wordcloud_process = st.container()
 graph_pie = st.container()
 journals_list = st.container()
 row1col1, row1col2, row1col3 = st.columns([7,4.7,7])
-row2col1, row2col2, row2col3 = st.columns([7,2,7])
+row2col1, row2col2, row2col3 = st.columns([7,3,7])
 
  
     
@@ -132,7 +132,7 @@ if data is not None:
     publishers_occurence = Counter(publishers).most_common(10)
     df = pd.DataFrame(publishers_occurence)
     df.columns = ['Publisher', 'Occurence']
-    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 1.2, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(9,9),colormap='Set3')
+    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.5, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(9,9),colormap='Set3')
 
     row2col1.pyplot(use_container_width=True,)
      
@@ -156,7 +156,7 @@ if data is not None:
     publishers_occurence = Counter(publishers).most_common(10)
     df = pd.DataFrame(publishers_occurence)
     df.columns = ['Publisher', 'Occurence']
-    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 1.2, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(9,9),colormap='Set3')
+    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.5, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(9,9),colormap='Set3')
 
     row2col3.pyplot()
     
