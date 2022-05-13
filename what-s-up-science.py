@@ -132,7 +132,7 @@ if data is not None:
     publishers_occurence = Counter(publishers).most_common(10)
     df = pd.DataFrame(publishers_occurence)
     df.columns = ['Publisher', 'Occurence']
-    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.6, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(7,7),colormap='Set3')
+    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.6, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
     plt.legend(loc='upper left', fontsize=8)
     row2col1.pyplot()
      
@@ -156,7 +156,7 @@ if data is not None:
     publishers_occurence = Counter(publishers).most_common(10)
     df = pd.DataFrame(publishers_occurence)
     df.columns = ['Publisher', 'Occurence']
-    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.6, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(7,7),colormap='Set3')
+    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.6, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
     plt.legend(loc='upper right', fontsize=8)
     row2col3.pyplot()
     
