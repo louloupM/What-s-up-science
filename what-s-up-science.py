@@ -217,17 +217,13 @@ if data is not None:
     library = library.head(10)
     library = library[['Title','DOI','Year','Source title']]
     
-    gb = GridOptionsBuilder.from_dataframe(library)
-    gb.configure_pagination(paginationAutoPageSize=True) #Add pagination
-    gb.configure_side_bar() #Add a sidebar
-    gb.configure_selection('multiple', use_checkbox=True, groupSelectsChildren="Group checkbox select children") #Enable multi-row selection
-    gridOptions = gb.build()
+
 
     
     grid_response = AgGrid(
     library,
     fit_columns_on_grid_load=True,
-    height=350, 
+    height=300, 
     width='100%',
     reload_data=True
     )
