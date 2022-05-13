@@ -150,8 +150,7 @@ if data is not None:
                      size='Pop', size_max = 25, color='Country',
                      projection="natural earth")
     fig.update_layout(showlegend=False)
-
-
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
     row2col2.plotly_chart(fig, use_container_width=True, sharing="streamlit")
 
     
