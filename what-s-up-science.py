@@ -178,7 +178,7 @@ if data is not None:
     df.groupby(['Publisher']).sum().plot(kind='pie',radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
     plt.legend(loc='upper left', fontsize=11)
     plt.margins(0,0)
-    row2col1.markdown("<h2 style='text-align: center; font-size:20px; color: White;'>Blank</h2>", unsafe_allow_html=True)
+    row2col1.markdown("<h2 style='text-align: center; font-size:30px; color: White;'>Blank</h2>", unsafe_allow_html=True)
     row2col1.pyplot()
      
     #Domain code
@@ -204,5 +204,5 @@ if data is not None:
     df.groupby(['Publisher']).sum().plot(kind='pie', radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
     plt.legend(loc='upper right', fontsize=11)
     plt.margins(0,0)
-    row2col3.markdown("<h2 style='text-align: center; font-size:20px; color: White;'>Blank</h2>", unsafe_allow_html=True)
+    row2col3.markdown("<h2 style='text-align: center; font-size:30px; color: White;'>Blank</h2>", unsafe_allow_html=True)
     row2col3.pyplot()  
