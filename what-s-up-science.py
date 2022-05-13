@@ -212,7 +212,7 @@ if data is not None:
     
 
     library['Cited by'] = library['Cited by'].fillna(0)
-    library.sort_values('Occurence')
+    library.sort_values('Cited by')
 
     library = library.head(10)
     AgGrid(library)
