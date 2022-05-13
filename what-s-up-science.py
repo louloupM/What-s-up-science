@@ -152,7 +152,7 @@ if data is not None:
     fig.update_layout(showlegend=False)
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0,"autoexpand":True})
 
-    row3col3.plotly_chart(fig, use_container_width=True, sharing="streamlit")
+    row3col2.plotly_chart(fig, use_container_width=True, sharing="streamlit")
 
     
     #Publisher code
