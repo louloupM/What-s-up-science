@@ -143,11 +143,11 @@ if data is not None:
 
 
     d = {'Country':Country,'iso_alpha':iso_alpha,'Pop':Pop}
-    df = pd.DataFrame(d)
+    df_worldmap = pd.DataFrame(d)
 
 
-    fig = px.scatter_geo(df,  locations="iso_alpha",
-                     size='Pop', size_max = 25, color='Country', 
+    fig = px.scatter_geo(df_worldmap,  locations="iso_alpha",
+                     size='Pop', size_max = 25, color='Country',showlegend="false", 
                      projection="natural earth")
 
 
