@@ -213,7 +213,7 @@ if data is not None:
 
     library['Cited by'] = library['Cited by'].fillna(0)
     library['Cited by'] = library['Cited by'].astype(int)
-    library = library.sort_values('Cited by')
+    library = library.sort_values('Cited by', ascending=False)
 
-    library = library.head(10)
+    library.head(10)
     AgGrid(library)
