@@ -102,9 +102,7 @@ if data is not None:
     plt.barh(x2, y2, label = 'Bar', color = 'lightskyblue')
     row1col3.pyplot(use_container_width=True,)
     
-    st.markdown(f'<p style="background-color:#0066cc;color:#33ff33;font-size:24px;border-radius:2%;">{url}</p>', unsafe_allow_html=True)
-    
-    st.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
+    row2col2.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
     
     
     #Publisher code
@@ -149,19 +147,13 @@ if data is not None:
                 publisher = df.iat[0,4]
                 publishers.append(publisher)
     
-
     publishers_occurence = Counter(publishers).most_common(10)
     df = pd.DataFrame(publishers_occurence)
     df.columns = ['Publisher', 'Occurence']
     df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.8, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
     plt.legend(loc='upper right', fontsize=8)
     plt.margins(0,0)
-    row2col3.pyplot()
-    
-    
-    st.markdown('#')
-    
-
+    row2col3.pyplot()  
     
     
     #World Map code
