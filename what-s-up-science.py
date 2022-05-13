@@ -126,7 +126,7 @@ if data is not None:
     df = pd.DataFrame(publishers_occurence)
     df.columns = ['Publisher', 'Occurence']
     df.groupby(['Publisher']).sum().plot(kind='pie',radius = 0.8, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
-    plt.legend(loc='upper left', fontsize=8)
+    plt.legend(loc='upper left', fontsize=12)
     plt.margins(0,0)
     row2col1.pyplot()
      
@@ -151,7 +151,7 @@ if data is not None:
     df = pd.DataFrame(publishers_occurence)
     df.columns = ['Publisher', 'Occurence']
     df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.8, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
-    plt.legend(loc='upper right', fontsize=8)
+    plt.legend(loc='upper right', fontsize=12)
     plt.margins(0,0)
     row2col3.pyplot()  
     
