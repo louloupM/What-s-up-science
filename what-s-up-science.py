@@ -223,7 +223,7 @@ if data is not None:
     library = library[['Title','DOI','Year','Source title']]
     
     grid_response = AgGrid(
-    data,
+    library,
     gridOptions=gridOptions,
     data_return_mode='AS_INPUT', 
     update_mode='MODEL_CHANGED', 
@@ -235,4 +235,4 @@ if data is not None:
     reload_data=True
     )
     
-    AgGrid(library)
+
