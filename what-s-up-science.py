@@ -211,6 +211,6 @@ if data is not None:
     row3col3.pyplot()
     
     library.sort_values('Cited by')
-    del df['column_name']
+    del df['authors']
     library = library.head(10)
     AgGrid(library)
