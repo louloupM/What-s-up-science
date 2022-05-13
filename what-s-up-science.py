@@ -215,7 +215,7 @@ if data is not None:
     library['Cited by'] = library['Cited by'].fillna(0)
     library = library.sort_values('Cited by', ascending=False)
     library = library.head(10)
-    library = library.apply(str)
+    library = library.applymap(str)
     library = library[['Title','Year','Cited by','DOI','Source title']]
     
 
