@@ -50,7 +50,7 @@ graph_pie = st.container()
 journals_list = st.container()
 row1col1, row1col2, row1col3 = st.columns([7,4.7,7])
 row2col1, row2col2, row2col3 = st.columns([3,4,3])
-row3col1, row3col2, row3col3 = st.columns([3,5,3])
+row3col1, row3col2, row3col3 = st.columns([3,4,3])
 
  
     
