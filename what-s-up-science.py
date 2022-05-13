@@ -71,7 +71,6 @@ if data is not None:
     year_occurence = Counter(year).most_common()
     dg = pd.DataFrame(year_occurence)
     dg.columns = ['A', 'B']
-    st.write(dg)
     
     journals = library['Source title'].to_list()
     journals_occurence = Counter(journals).most_common()
