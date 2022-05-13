@@ -147,7 +147,7 @@ if data is not None:
 
 
     fig = px.scatter_geo(df,  locations="iso_alpha",
-                     size='Pop', size_max = 25, color='country', 
+                     size='Pop', size_max = 25, color='Country', 
                      projection="natural earth")
 
 
