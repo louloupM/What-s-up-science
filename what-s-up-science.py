@@ -147,15 +147,15 @@ if data is not None:
 
 
     fig = px.scatter_geo(df_worldmap,  locations="iso_alpha",
-                     size='Pop', size_max = 25, color='Country',showlegend="false", 
+                     size='Pop', size_max = 25, color='Country',
                      projection="natural earth")
-
-
-
+    fig.update(fig, showlegend="false")
 
     row2col2.plotly_chart(fig, use_container_width=True, sharing="streamlit")
 
+    
     #Publisher code
+    
     
     publishers=[]
     for element in journals:
