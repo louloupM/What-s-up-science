@@ -132,7 +132,7 @@ if data is not None:
     publishers_occurence = Counter(publishers).most_common(10)
     df = pd.DataFrame(publishers_occurence)
     df.columns = ['Publisher', 'Occurence']
-    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 1.2, subplots=True, legend= True, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
+    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 1.2, Labels=None, subplots=True, legend= True, ylabel='', fontsize=10, figsize=(9,9),colormap='Set3')
 
     row2col1.pyplot(use_container_width=True,)
      
