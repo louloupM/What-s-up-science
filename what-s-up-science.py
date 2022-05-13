@@ -208,6 +208,7 @@ if data is not None:
     st.write(df)
     df.groupby(['Publisher']).sum().plot(kind='pie', radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
     plt.legend(loc='upper right', fontsize=12)
+    plt.update_layout(legend_traceorder='normal')
     plt.margins(0,0)
     row3col3.markdown("<h2 style='text-align: center; font-size:10px; color: White;'>Blank</h2>", unsafe_allow_html=True)
     row3col3.pyplot()  
