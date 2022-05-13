@@ -214,5 +214,5 @@ if data is not None:
     library['Cited by'] = library['Cited by'].fillna(0)
     library = library.sort_values('Cited by', ascending=False)
     library = library.head(10)
-    library = library[['Title', 'Year','Source title', 'DOI']]
+    library = library[['Title','DOI','Year','Source title']]
     AgGrid(library)
