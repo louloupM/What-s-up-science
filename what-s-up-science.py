@@ -49,7 +49,7 @@ graph_pie = st.container()
 journals_list = st.container()
 row1col1, row1col2, row1col3 = st.columns([7,4.7,7])
 row2col1, row2col2, row2col3 = st.columns([3,5,3])
-row3col1, row3col2, row3col3 = st.columns([2,5,2])
+row3col1, row3col2, row3col3 = st.columns([3,5,3])
 
  
     
@@ -101,7 +101,7 @@ if data is not None:
     plt.tick_params(axis='y')
     plt.barh(x2, y2, label = 'Bar', color = 'lightskyblue')
     row1col3.pyplot(use_container_width=True,)
-    
+
     row2col2.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
 
     
@@ -152,7 +152,7 @@ if data is not None:
     fig.update_layout(showlegend=False)
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0,"autoexpand":True})
 
-    row2col2.plotly_chart(fig, use_container_width=True, sharing="streamlit")
+    row3col3.plotly_chart(fig, use_container_width=True, sharing="streamlit")
 
     
     #Publisher code
@@ -179,8 +179,8 @@ if data is not None:
     df.groupby(['Publisher']).sum().plot(kind='pie',radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
     plt.legend(loc='upper left', fontsize=11)
     plt.margins(0,0)
-    row2col1.markdown("<h2 style='text-align: center; font-size:30px; color: White;'>Blank</h2>", unsafe_allow_html=True)
-    row2col1.pyplot()
+    row3col1.markdown("<h2 style='text-align: center; font-size:30px; color: White;'>Blank</h2>", unsafe_allow_html=True)
+    row3col1.pyplot()
      
     #Domain code
     
@@ -205,5 +205,5 @@ if data is not None:
     df.groupby(['Publisher']).sum().plot(kind='pie', radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
     plt.legend(loc='upper right', fontsize=11)
     plt.margins(0,0)
-    row2col3.markdown("<h2 style='text-align: center; font-size:30px; color: White;'>Blank</h2>", unsafe_allow_html=True)
-    row2col3.pyplot()  
+    row3col3.markdown("<h2 style='text-align: center; font-size:30px; color: White;'>Blank</h2>", unsafe_allow_html=True)
+    row3col3.pyplot()  
