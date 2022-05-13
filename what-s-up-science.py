@@ -48,7 +48,7 @@ pie_domain = st.container()
 graph_pie = st.container()
 journals_list = st.container()
 row1col1, row1col2, row1col3 = st.columns([7,4.7,7])
-row2col1, row2col2, row2col3 = st.columns([3,5,3])
+row2col1, row2col2, row2col3 = st.columns([7,5,7])
 row3 = st.container()
 
  
@@ -130,7 +130,6 @@ if data is not None:
     df.groupby(['Publisher']).sum().plot(kind='pie',radius = 0.6, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
     plt.legend(loc='upper left', fontsize=8)
     plt.margins(0,0)
-    plt.Circle((0,0), 0.7, color='black')
     row2col1.pyplot()
      
     #Domain code
