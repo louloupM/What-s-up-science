@@ -48,7 +48,7 @@ wordcloud_process = st.container()
 graph_pie = st.container()
 journals_list = st.container()
 row1col1, row1col2, row1col3 = st.columns([7,4.7,7])
-row2col1, row2col2, row2col3 = st.columns([7,7,7])
+row2col1, row2col2, row2col3 = st.columns([7,5,7])
 
  
     
@@ -101,15 +101,7 @@ if data is not None:
     plt.barh(x2, y2, label = 'Bar', color = 'lightskyblue')
     row1col3.pyplot(use_container_width=True,)
     
-    with row2col2:
-        st.write('')
-        st.write('')
-        st.write('')
-        st.write('')
-        st.write('')
-        st.write('')
-        st.write('')
-        st.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
+    row2col2.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
     
     
     #Publisher code
