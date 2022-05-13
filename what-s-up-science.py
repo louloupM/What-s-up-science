@@ -103,7 +103,7 @@ if data is not None:
     row1col3.pyplot(use_container_width=True,)
     
     row2col2.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
-    row2col2.markdown("<h2 style='text-align: center; font-size:10px; color: White;'>Blank</h2>", unsafe_allow_html=True)
+    row2col2.markdown("<h2 style='text-align: center; font-size:5px; color: White;'>Blank</h2>", unsafe_allow_html=True)
     
   
     
