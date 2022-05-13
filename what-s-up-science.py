@@ -210,7 +210,9 @@ if data is not None:
     row3col3.markdown("<h2 style='text-align: center; font-size:10px; color: White;'>Blank</h2>", unsafe_allow_html=True)
     row3col3.pyplot()
     
+    library['Cited by'] = library['Cited by'].astype(int)
     library.sort_values('Cited by')
+
 
     library = library.head(10)
     AgGrid(library)
