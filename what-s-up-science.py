@@ -102,7 +102,7 @@ if data is not None:
     plt.barh(x2, y2, label = 'Bar', color = 'lightskyblue')
     row1col3.pyplot(use_container_width=True,)
     
-    row2col2.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
+    st.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
     
     
     #Publisher code
@@ -202,5 +202,5 @@ if data is not None:
 
 
 
-    row3col2.plotly_chart(fig, use_container_width=True, sharing="streamlit")
+    row2col2.plotly_chart(fig, use_container_width=True, sharing="streamlit")
 
