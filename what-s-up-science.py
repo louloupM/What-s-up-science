@@ -211,7 +211,7 @@ if data is not None:
     row3col3.pyplot()
     
 
-    library['Cited by'] = library['Citeb by'].fillna(0)
+    library['Cited by'] = library['Cited by'].fillna(0)
     library.sort_values('Occurence')
 
     library = library.head(10)
