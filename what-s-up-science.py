@@ -105,56 +105,7 @@ if data is not None:
     st.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
     
     
-    #Publisher code
-    
-    publishers=[]
-    for element in journals:
-        if str(element) == 'nan':
-            pass
-        else:
-            publication = element.lower()
-            new_df = df_journal_list
-            new_df['Title'] = new_df['Title'].str.lower()
-            df = new_df[new_df['Title']==publication]
-            if df.empty:
-                pass
-            else:
-                publisher = df.iat[0,3]
-                publishers.append(publisher)
-    
-    publishers_occurence = Counter(publishers).most_common(10)
-    df = pd.DataFrame(publishers_occurence)
-    df.columns = ['Publisher', 'Occurence']
-    df.groupby(['Publisher']).sum().plot(kind='pie',radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
-    plt.legend(loc='upper left', fontsize=11)
-    plt.margins(0,0)
-    row2col1.pyplot()
-     
-    #Domain code
-    
-    publishers=[]
-    for element in journals:
-        if str(element) == 'nan':
-            pass
-        else:
-            publication = element.lower()
-            new_df = df_journal_list
-            new_df['Title'] = new_df['Title'].str.lower()
-            df = new_df[new_df['Title']==publication]
-            if df.empty:
-                pass
-            else:
-                publisher = df.iat[0,4]
-                publishers.append(publisher)
-    
-    publishers_occurence = Counter(publishers).most_common(10)
-    df = pd.DataFrame(publishers_occurence)
-    df.columns = ['Publisher', 'Occurence']
-    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
-    plt.legend(loc='upper right', fontsize=11)
-    plt.margins(0,0)
-    row2col3.pyplot()  
-    
+  
     
     #World Map code
     
@@ -204,3 +155,52 @@ if data is not None:
 
     row2col2.plotly_chart(fig, use_container_width=True, sharing="streamlit")
 
+    #Publisher code
+    
+    publishers=[]
+    for element in journals:
+        if str(element) == 'nan':
+            pass
+        else:
+            publication = element.lower()
+            new_df = df_journal_list
+            new_df['Title'] = new_df['Title'].str.lower()
+            df = new_df[new_df['Title']==publication]
+            if df.empty:
+                pass
+            else:
+                publisher = df.iat[0,3]
+                publishers.append(publisher)
+    
+    publishers_occurence = Counter(publishers).most_common(10)
+    df = pd.DataFrame(publishers_occurence)
+    df.columns = ['Publisher', 'Occurence']
+    df.groupby(['Publisher']).sum().plot(kind='pie',radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
+    plt.legend(loc='upper left', fontsize=11)
+    plt.margins(0,0)
+    row2col1.pyplot()
+     
+    #Domain code
+    
+    publishers=[]
+    for element in journals:
+        if str(element) == 'nan':
+            pass
+        else:
+            publication = element.lower()
+            new_df = df_journal_list
+            new_df['Title'] = new_df['Title'].str.lower()
+            df = new_df[new_df['Title']==publication]
+            if df.empty:
+                pass
+            else:
+                publisher = df.iat[0,4]
+                publishers.append(publisher)
+    
+    publishers_occurence = Counter(publishers).most_common(10)
+    df = pd.DataFrame(publishers_occurence)
+    df.columns = ['Publisher', 'Occurence']
+    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
+    plt.legend(loc='upper right', fontsize=11)
+    plt.margins(0,0)
+    row2col3.pyplot()  
