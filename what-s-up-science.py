@@ -215,7 +215,7 @@ if data is not None:
     library['Cited by'] = library['Cited by'].fillna(0)
     library = library.sort_values('Cited by', ascending=False)
     library = library.head(10)
-    library = library[['Title','DOI','Year','Source title']]
+    library = library[['Title','Year','DOI','Source title']]
     
 
 
@@ -223,7 +223,7 @@ if data is not None:
     grid_response = AgGrid(
     library,
     fit_columns_on_grid_load=True,
-    height=300, 
+    height=150, 
     width='100%',
     reload_data=True
     )
