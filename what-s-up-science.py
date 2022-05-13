@@ -148,7 +148,7 @@ if data is not None:
 
     fig = px.scatter_geo(df_worldmap,  locations="iso_alpha",
                      size='Pop', size_max = 25, color='Country',
-                     projection="naturalearth")
+                     projection="natural earth")
     fig.update_layout(showlegend=False)
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0,"autoexpand":True})
     row3col2.markdown("<h2 style='text-align: center; font-size:5px; color: White;'>Blank</h2>", unsafe_allow_html=True)
