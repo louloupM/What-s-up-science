@@ -43,8 +43,8 @@ st.write('<style>div.block-container{padding-top:2rem;}</style>', unsafe_allow_h
 st.markdown("<h1 style='text-align: center; color: Black;'>What's up Science ?</h1>", unsafe_allow_html=True)
 header = st.container()
 data = st.file_uploader("Upload a Dataset", type=["csv"]) 
-wordcloud_material = st.container()
-wordcloud_process = st.container()
+pie_publisher = st.container()
+pie_domain = st.container()
 graph_pie = st.container()
 journals_list = st.container()
 row1col1, row1col2, row1col3 = st.columns([7,4.7,7])
@@ -124,11 +124,12 @@ if data is not None:
                 publisher = df.iat[0,3]
                 publishers.append(publisher)
     
-    publishers_occurence = Counter(publishers).most_common(10)
-    df = pd.DataFrame(publishers_occurence)
-    df.columns = ['Publisher', 'Occurence']
-    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.6, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
-    plt.legend(loc='upper left', fontsize=8)
+    with pie_publisher:
+        publishers_occurence = Counter(publishers).most_common(10)
+        df = pd.DataFrame(publishers_occurence)
+        df.columns = ['Publisher', 'Occurence']
+        df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.6, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
+        plt.legend(loc='upper left', fontsize=8)
     row2col1.pyplot()
      
     #Domain code
@@ -148,11 +149,12 @@ if data is not None:
                 publisher = df.iat[0,4]
                 publishers.append(publisher)
     
-    publishers_occurence = Counter(publishers).most_common(10)
-    df = pd.DataFrame(publishers_occurence)
-    df.columns = ['Publisher', 'Occurence']
-    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.6, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
-    plt.legend(loc='upper right', fontsize=8)
+    with pie_domain:
+        publishers_occurence = Counter(publishers).most_common(10)
+        df = pd.DataFrame(publishers_occurence)
+        df.columns = ['Publisher', 'Occurence']
+        df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.6, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
+        plt.legend(loc='upper right', fontsize=8)
     row2col3.pyplot()
     
     
