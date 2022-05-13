@@ -154,7 +154,7 @@ if data is not None:
     row2col3.pyplot()
     
     
-    
+    row3.write('Hello')
     
 
     
