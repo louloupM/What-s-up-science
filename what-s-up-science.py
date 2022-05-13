@@ -24,7 +24,7 @@ from matplotlib import pyplot as plt
 import plotly.express as px
 import pycountry
 import string
-
+from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
 
 
 
@@ -208,4 +208,6 @@ if data is not None:
     plt.legend(loc='upper right', fontsize=12)
     plt.margins(0,0)
     row3col3.markdown("<h2 style='text-align: center; font-size:10px; color: White;'>Blank</h2>", unsafe_allow_html=True)
-    row3col3.pyplot()  
+    row3col3.pyplot()
+    
+    AgGrid(df)
