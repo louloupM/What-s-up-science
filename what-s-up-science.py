@@ -130,7 +130,7 @@ if data is not None:
     df.groupby(['Publisher']).sum().plot(kind='pie', radius = 0.6, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
     plt.legend(loc='upper left', fontsize=8)
     plt.margins(0,0)
-    fig.set_facecolor('lightgrey')
+    plt.set_facecolor('lightgrey')
     row2col1.pyplot()
      
     #Domain code
