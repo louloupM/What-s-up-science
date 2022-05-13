@@ -10,4 +10,4 @@ docx2txt==0.8
 rake-nltk==1.0.6
 pycountry==22.3.5
 plotly==5.7.0
-streamlit-aggrid==0.2.3
+streamlit-aggrid==0.2.3.post2
