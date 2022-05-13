@@ -134,7 +134,7 @@ if data is not None:
     df.columns = ['Publisher', 'Occurence']
     df.groupby(['Publisher']).sum().plot(kind='pie',subplots=True, ylabel=None, fontsize=10, colormap='Set3')
 
-    row2col1.pyplot()
+    row2col1.pyplot(use_container_width=True,)
      
     #Domain code
     
