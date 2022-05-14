@@ -221,10 +221,10 @@ if data is not None:
     
 
 
+    st.markdown("<h1 style='text-align: center;font-style: italic;font-size:10px; color: Black;'>Top 10 most cited papers", unsafe_allow_html=True) 
     
     grid_response = AgGrid(
     library,
-    title = 'lol',
     fit_columns_on_grid_load=True,
     height=200, 
     width='100%',
