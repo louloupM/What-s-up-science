@@ -226,7 +226,7 @@ if data is not None:
     grid_response = AgGrid(
     library,
     fit_columns_on_grid_load=True,
-    height=180, 
+    height=175, 
     width='100%',
     reload_data=True
     )
