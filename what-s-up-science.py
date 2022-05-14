@@ -211,10 +211,12 @@ if data is not None:
     row3col3.markdown("<h2 style='text-align: center; font-size:10px; color: White;'>Blank</h2>", unsafe_allow_html=True)
     row3col3.pyplot()
     
+       
+    
 
     library['Cited by'] = library['Cited by'].fillna(0)
     library = library.sort_values('Cited by', ascending=False)
-    library = library.head(10)
+    library = library.head(5)
     library = library[['Title','Year','Cited by','DOI','Source title']]
     
 
@@ -222,6 +224,7 @@ if data is not None:
     
     grid_response = AgGrid(
     library,
+    title = 'lol',
     fit_columns_on_grid_load=True,
     height=200, 
     width='100%',
