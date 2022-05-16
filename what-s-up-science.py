@@ -80,6 +80,7 @@ if data is not None:
     df['A'] = df['A'].fillna('None')
     df['A'] = [item[:40] for item in df['A']]
     
+    library['Cited by'] = library['Cited by'].fillna(0)
     citation = library['Cited by'].sum() 
 
     citation = round(citation)
