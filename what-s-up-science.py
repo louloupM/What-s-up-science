@@ -73,7 +73,7 @@ if data is not None:
     dg = pd.DataFrame(year_occurence)
     dg.columns = ['A', 'B']
     
-    journals = library['Source title'].to_list()
+    journals = library['Journal'].to_list()
     journals_occurence = Counter(journals).most_common()
     df = pd.DataFrame(journals_occurence)    
     df.columns = ['A', 'B']
@@ -218,7 +218,7 @@ if data is not None:
     library['Cited by'] = library['Cited by'].fillna(0)
     library = library.sort_values('Cited by', ascending=False)
     library = library.head(5)
-    library = library[['Title','Year','Cited by','DOI','Source title']]
+    library = library[['Title','Year','Cited by','DOI','Journal']]
     
 
 
