@@ -130,6 +130,7 @@ def prepare_data(file_bytes):
     # Scopus uses "Source title"; older input used "Journal".
     column_map = {
         "Title": find_column(raw, ["Title"]),
+        "Abstract": find_column(raw, ["Abstract"]),
         "Year": find_column(raw, ["Year", "Publication Year"]),
         "Journal": find_column(raw, ["Source title", "Journal", "Source Title"]),
         "Cited by": find_column(raw, ["Cited by", "Citations", "Times Cited"]),
@@ -143,13 +144,13 @@ def prepare_data(file_bytes):
         "Open Access": find_column(raw, ["Open Access"]),
     }
 
-    required = ["Title", "Year", "Journal"]
+    required = ["Title", "Year", "Journal", "Abstract"]
     missing = [name for name in required if column_map[name] is None]
     if missing:
         raise ValueError(
             "Colonnes indispensables absentes : "
             + ", ".join(missing)
-            + ". Le fichier doit notamment contenir Title, Year et "
+            + ". Le fichier doit notamment contenir Title, Year, Abstract et "
               "Source title (ou Journal)."
         )
 
@@ -166,6 +167,7 @@ def prepare_data(file_bytes):
             df[col] = raw[col]
 
     df["Title"] = df["Title"].fillna("").astype(str).str.strip()
+    df["Abstract"] = df["Abstract"].fillna("").astype(str).str.strip()
     df["Journal"] = (
         df["Journal"].fillna("Unknown journal").astype(str).str.strip()
     )
@@ -398,8 +400,8 @@ st.divider()
 st.markdown("## Research topics")
 
 all_words = []
-for title in filtered["Title"]:
-    all_words.extend(clean_title(title))
+for abstract in filtered["Abstract"]:
+    all_words.extend(clean_abstract(abstract))
 
 word_counts = Counter(all_words)
 left, right = st.columns([2, 1])
@@ -421,7 +423,7 @@ with left:
         st.pyplot(fig, use_container_width=True)
         plt.close(fig)
     else:
-        st.info("No usable words found in publication titles.")
+        st.info("No usable words found in publication abstract.")
 
 with right:
     st.markdown("### Top 20 keywords")
