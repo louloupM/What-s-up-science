@@ -1,235 +1,734 @@
-import streamlit as st
-import collections
-from collections import Counter
+
 import re
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
-import numpy as np
-from PIL import Image
-import pandas as pd
-import webbrowser
-import streamlit.components.v1 as components
-from transformers import AutoTokenizer, AutoModel
-from itertools import chain
-import requests
 import os
-import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
-from nltk.corpus import stopwords 
-import numpy as np
+from collections import Counter
+
+import streamlit as st
 import pandas as pd
-from rake_nltk import Rake
-from matplotlib import pyplot as plt
+import numpy as np
 import plotly.express as px
+import matplotlib.pyplot as plt
 import pycountry
-import string
-from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
+
+from wordcloud import WordCloud
 
 
+# ============================================================
+# CONFIGURATION
+# ============================================================
+
+st.set_page_config(
+    page_title="What's up Science?",
+    page_icon="🔬",
+    layout="wide"
+)
+
+JOURNAL_URL = (
+    "https://raw.githubusercontent.com/louloupM/"
+    "what-s-up-science/main/"
+    "Scientific%20journal%20list%201.2.csv"
+)
+
+STOPWORDS = {
+    "the", "and", "for", "with", "from", "using", "based",
+    "into", "through", "study", "studies", "effect", "effects",
+    "analysis", "characterization", "evaluation", "development",
+    "novel", "new", "high", "low", "different", "role",
+    "approach", "method", "methods", "production", "application",
+    "applications", "properties", "activity", "activities",
+    "investigation", "towards", "via", "between", "under",
+    "over", "after", "before", "during", "its", "their",
+    "this", "that", "these", "those", "are", "was", "were",
+    "has", "have", "been", "can", "may", "not", "on", "in",
+    "of", "to", "a", "an", "by", "as", "at", "or", "is"
+}
+
+# Common alternative country names
+COUNTRY_ALIASES = {
+    "USA": "United States",
+    "U.S.A.": "United States",
+    "US": "United States",
+    "UK": "United Kingdom",
+    "U.K.": "United Kingdom",
+    "England": "United Kingdom",
+    "Scotland": "United Kingdom",
+    "South Korea": "Korea, Republic of",
+    "North Korea": "Korea, Democratic People's Republic of",
+    "Russia": "Russian Federation",
+    "Iran": "Iran, Islamic Republic of",
+    "Vietnam": "Viet Nam",
+    "Taiwan": "Taiwan, Province of China",
+    "Bolivia": "Bolivia, Plurinational State of",
+    "Tanzania": "Tanzania, United Republic of",
+    "Syria": "Syrian Arab Republic",
+    "Venezuela": "Venezuela, Bolivarian Republic of",
+    "Moldova": "Moldova, Republic of"
+}
 
 
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
+# ============================================================
+# STYLE
+# ============================================================
+
+st.markdown("""
+<style>
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+.main-title {
+    text-align: center;
+    font-size: 38px;
+    font-weight: 700;
+    color: #20252B;
+    margin-bottom: 5px;
+}
+.subtitle {
+    text-align: center;
+    color: #68737D;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+.metric-card {
+    background-color: #F5F8FA;
+    padding: 18px;
+    border-radius: 10px;
+    text-align: center;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown(
+    '<div class="main-title">🔬 What\'s up Science?</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    '<div class="subtitle">Scientific publication analytics dashboard</div>',
+    unsafe_allow_html=True
+)
 
 
-url='https://raw.githubusercontent.com/louloupM/what-s-up-science/main/Scientific%20journal%20list%201.2.csv'
-df_journal_list = pd.read_csv(url)
+# ============================================================
+# DATA LOADING
+# ============================================================
+
+@st.cache_data(ttl=86400)
+def load_journal_database():
+
+    return pd.read_csv(JOURNAL_URL)
 
 
+@st.cache_data(show_spinner=False)
+def prepare_data(file_bytes):
 
+    from io import BytesIO
 
-st.set_option('deprecation.showPyplotGlobalUse', False)
-st.set_page_config(layout="wide")
-st.write('<style>div.block-container{padding-top:2rem;}</style>', unsafe_allow_html=True)
-st.markdown("<h1 style='text-align: center; color: Black;'>What's up Science ?</h1>", unsafe_allow_html=True)
-header = st.container()
-data = st.file_uploader("Upload a Dataset", type=["csv"]) 
-pie_publisher = st.container()
-pie_domain = st.container()
-graph_pie = st.container()
-journals_list = st.container()
-row1col1, row1col2, row1col3 = st.columns([7,4.7,7])
-row2col1, row2col2, row2col3 = st.columns([3,4,3])
-row3col1, row3col2, row3col3 = st.columns([3,4,3])
+    df = pd.read_csv(BytesIO(file_bytes))
 
- 
-    
-if data is not None:    
-    library = pd.read_csv(data)
-    titles = library['Title'].to_list()   
-    titles = [each_string.lower() for each_string in titles]
-    titles = [y for x in titles for y in x.split(' ')]    
-    titles = [re.sub(r'\([^)]*\)', '',str(word)) for word in titles]
-    titles = [re.sub(r'\(|\)|\'|\:',' ',str(word),flags=re.MULTILINE) for word in titles]
-    titles = [word for word in titles if word not in stopwords.words('english')]
-    titles = filter (lambda s:any([c.isalpha() for c in s]), titles)
-    titles = Counter(titles)
-    
-    keywords = titles.most_common(20)
-    wordcloud = WordCloud(background_color = 'white', width=1000, height=450, max_words = 40).generate_from_frequencies(titles)           
-    
-    year = library['Year'].to_list()
-    year_occurence = Counter(year).most_common()
-    dg = pd.DataFrame(year_occurence)
-    dg.columns = ['A', 'B']
-    
-    journals = library['Journal'].to_list()
-    journals_occurence = Counter(journals).most_common()
-    df = pd.DataFrame(journals_occurence)    
-    df.columns = ['A', 'B']
-    df['A'] = df['A'].fillna('None')
-    df['A'] = [item[:40] for item in df['A']]
-    
-    library['Cited by'] = library['Cited by'].fillna(0)
-    citation = library['Cited by'].sum() 
+    # Required columns
+    required_columns = ["Title", "Year", "Journal"]
 
-    citation = round(citation)
+    missing = [
+        col for col in required_columns
+        if col not in df.columns
+    ]
 
-    plt.imshow(wordcloud)
-    plt.axis("off")
-    row1col1.pyplot(use_container_width=True)
-    
-    x1 = dg.loc[:50,'A'].values
-    y1 = dg.loc[:50,'B'].values
-    plt.tick_params(axis='x')
-    plt.tick_params(axis='y')
-    plt.bar(x1, y1,edgecolor = "none", label = 'Bar', color = 'lightskyblue')
-    row1col2.pyplot(use_container_width=True,)    
+    if missing:
+        raise ValueError(
+            f"Missing required columns: {', '.join(missing)}"
+        )
 
-    x2 = df.loc[:20,'A'].values
-    y2 = df.loc[:20,'B'].values
-    plt.gca().invert_yaxis()
-    plt.tick_params(axis='x')
-    plt.tick_params(axis='y')
-    plt.barh(x2, y2, label = 'Bar', color = 'lightskyblue')
-    row1col3.pyplot(use_container_width=True,)
+    # Optional columns
+    for col in ["Cited by", "DOI", "Affiliations"]:
+        if col not in df.columns:
+            df[col] = np.nan
 
-    row2col2.markdown("<h1 style='text-align: center;font-style: italic;font-size:20px; color: Black;'>"+str(citation)+" total citations</h1>", unsafe_allow_html=True)   
+    # Clean data
+    df["Title"] = df["Title"].fillna("").astype(str)
+    df["Journal"] = df["Journal"].fillna("Unknown").astype(str)
 
-    
-  
-    
-    #World Map code
-    
-    
-    Year = []
-    Country = []
-    iso_alpha = []
-    count = []
-
-    Affiliations = library['Affiliations'].tolist()
-    for index, item in enumerate(Affiliations):
-        if str(item) == str('nan'):
-            pass
-        else:
-            item = re.sub(r'[^\w\s]',' ',item)
-            item = ' '.join(dict.fromkeys(item.split()))
-            Affiliations[index] = item
-
-    Country=[]
-    Pop = []
-    iso_alpha = []
-    for country in pycountry.countries:
-        if country.name in str(Affiliations):
-            Pop.append(str(Affiliations).count(country.name))
-            Country.append(country.name)
-
-
-    for item in Country:
-        code = pycountry.countries.search_fuzzy(item)
-        code = code[0].alpha_3
-        iso_alpha.append(code)
-
-
-
-
-
-    d = {'Country':Country,'iso_alpha':iso_alpha,'Pop':Pop}
-    df_worldmap = pd.DataFrame(d)
-
-
-    fig = px.scatter_geo(df_worldmap,  locations="iso_alpha",
-                     size='Pop', size_max = 25, color='Country',
-                     projection="orthographic")
-    fig.update_layout(showlegend=False)
-    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0,"autoexpand":True})
-    row3col2.markdown("<h2 style='text-align: center; font-size:5px; color: White;'>Blank</h2>", unsafe_allow_html=True)
-    row3col2.plotly_chart(fig, use_container_width=True, sharing="streamlit")
-
-    
-    #Publisher code
-    
-    
-    publishers=[]
-    for element in journals:
-        if str(element) == 'nan':
-            pass
-        else:
-            publication = element.lower()
-            new_df = df_journal_list
-            new_df['Title'] = new_df['Title'].str.lower()
-            df = new_df[new_df['Title']==publication]
-            if df.empty:
-                pass
-            else:
-                publisher = df.iat[0,3]
-                publishers.append(publisher)
-    
-    publishers_occurence = Counter(publishers).most_common(10)
-    df = pd.DataFrame(publishers_occurence)
-    df.columns = ['Publisher', 'Occurence']
-    df.sort_values('Occurence')
-    df.groupby(['Publisher']).sum().plot(kind='pie',radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
-    plt.legend(loc='upper left', fontsize=12)
-    plt.margins(0,0)
-    row3col1.markdown("<h2 style='text-align: center; font-size:10px; color: White;'>Blank</h2>", unsafe_allow_html=True)
-    row3col1.pyplot()
-     
-    #Domain code
-    
-    publishers=[]
-    for element in journals:
-        if str(element) == 'nan':
-            pass
-        else:
-            publication = element.lower()
-            new_df = df_journal_list
-            new_df['Title'] = new_df['Title'].str.lower()
-            df = new_df[new_df['Title']==publication]
-            if df.empty:
-                pass
-            else:
-                publisher = df.iat[0,4]
-                publishers.append(publisher)
-    
-    publishers_occurence = Counter(publishers).most_common(10)
-    df = pd.DataFrame(publishers_occurence)
-    df.columns = ['Publisher', 'Occurence']
-    df['Publisher'] = df['Publisher'].map(lambda x: re.sub(r'[^A-Za-z0-9 ]+', '', x))
-    df.groupby(['Publisher']).sum().plot(kind='pie', radius = 1, subplots=True, legend= True, ylabel='',labeldistance=None, fontsize=10, figsize=(10,10),colormap='Set3')
-    plt.legend(loc='upper right', fontsize=12)
-    plt.margins(0,0)
-    row3col3.markdown("<h2 style='text-align: center; font-size:10px; color: White;'>Blank</h2>", unsafe_allow_html=True)
-    row3col3.pyplot()
-    
-       
-    
-
-    library['Cited by'] = library['Cited by'].fillna(0)
-    library = library.sort_values('Cited by', ascending=False)
-    library = library.head(5)
-    library = library[['Title','Year','Cited by','DOI','Journal']]
-    
-
-
-    st.markdown("<h1 style='text-align: center;font-size:16px; color: Black;'>Top 5 most cited papers", unsafe_allow_html=True) 
-    
-    grid_response = AgGrid(
-    library,
-    fit_columns_on_grid_load=True,
-    height=175, 
-    width='100%',
-    reload_data=True
+    df["Year"] = pd.to_numeric(
+        df["Year"], errors="coerce"
     )
-    
 
+    df["Cited by"] = pd.to_numeric(
+        df["Cited by"], errors="coerce"
+    ).fillna(0)
+
+    df["Affiliations"] = (
+        df["Affiliations"].fillna("").astype(str)
+    )
+
+    df["DOI"] = df["DOI"].fillna("").astype(str)
+
+    return df
+
+
+# ============================================================
+# TEXT PROCESSING
+# ============================================================
+
+def clean_title(title):
+
+    title = title.lower()
+
+    # Remove text in brackets
+    title = re.sub(r"\([^)]*\)", " ", title)
+    title = re.sub(r"\[[^]]*\]", " ", title)
+
+    # Remove punctuation and numbers
+    title = re.sub(r"[^a-z\s-]", " ", title)
+
+    words = title.split()
+
+    words = [
+        word for word in words
+        if len(word) > 2
+        and word not in STOPWORDS
+    ]
+
+    return words
+
+
+# ============================================================
+# COUNTRY EXTRACTION
+# ============================================================
+
+def get_country_mapping():
+
+    mapping = {}
+
+    for country in pycountry.countries:
+
+        names = [
+            country.name
+        ]
+
+        if hasattr(country, "official_name"):
+            names.append(country.official_name)
+
+        if hasattr(country, "common_name"):
+            names.append(country.common_name)
+
+        for name in names:
+            mapping[name.lower()] = country.alpha_3
+
+    for alias, official_name in COUNTRY_ALIASES.items():
+
+        try:
+            country = pycountry.countries.lookup(official_name)
+            mapping[alias.lower()] = country.alpha_3
+
+        except LookupError:
+            pass
+
+    return mapping
+
+
+COUNTRY_MAPPING = get_country_mapping()
+
+
+def extract_countries(affiliation):
+
+    text = affiliation.lower()
+
+    found = set()
+
+    for name, iso_code in COUNTRY_MAPPING.items():
+
+        pattern = r"(?<!\w)" + re.escape(name) + r"(?!\w)"
+
+        if re.search(pattern, text):
+            found.add(iso_code)
+
+    return found
+
+
+# ============================================================
+# JOURNAL DATABASE
+# ============================================================
+
+@st.cache_data(ttl=86400)
+def prepare_journal_database():
+
+    journals = load_journal_database()
+
+    journals.columns = journals.columns.str.strip()
+
+    if "Title" not in journals.columns:
+        raise ValueError(
+            "The journal database does not contain a Title column."
+        )
+
+    # Preserve the original database structure:
+    # Column 4 = Publisher
+    # Column 5 = Domain
+
+    if len(journals.columns) < 5:
+        raise ValueError(
+            "The journal database must contain at least 5 columns."
+        )
+
+    publisher_column = journals.columns[3]
+    domain_column = journals.columns[4]
+
+    journals = journals[
+        ["Title", publisher_column, domain_column]
+    ].copy()
+
+    journals.columns = ["Journal", "Publisher", "Domain"]
+
+    journals["Journal"] = (
+        journals["Journal"].fillna("").astype(str).str.strip().str.lower()
+    )
+
+    journals = journals.drop_duplicates(
+        subset="Journal"
+    )
+
+    return journals
+
+
+# ============================================================
+# UPLOAD
+# ============================================================
+
+uploaded_file = st.file_uploader(
+    "Upload your bibliographic dataset",
+    type=["csv"]
+)
+
+if uploaded_file is None:
+
+    st.info(
+        "Please upload a CSV file containing your scientific publications."
+    )
+
+    st.markdown("""
+    **Expected columns:**
+    - Title
+    - Year
+    - Journal
+    - Cited by
+    - DOI
+    - Affiliations
+    """)
+
+    st.stop()
+
+
+try:
+
+    library = prepare_data(uploaded_file.getvalue())
+
+    journal_database = prepare_journal_database()
+
+except Exception as error:
+
+    st.error(f"Unable to process the dataset: {error}")
+    st.stop()
+
+
+# ============================================================
+# GENERAL STATISTICS
+# ============================================================
+
+total_publications = len(library)
+
+total_citations = int(library["Cited by"].sum())
+
+average_citations = (
+    round(total_citations / total_publications, 1)
+    if total_publications else 0
+)
+
+total_journals = library["Journal"].nunique()
+
+valid_years = library["Year"].dropna()
+
+if len(valid_years):
+    first_year = int(valid_years.min())
+    last_year = int(valid_years.max())
+else:
+    first_year = "N/A"
+    last_year = "N/A"
+
+
+st.markdown("## Publication overview")
+
+col1, col2, col3, col4, col5 = st.columns(5)
+
+col1.metric("Publications", f"{total_publications:,}")
+col2.metric("Total citations", f"{total_citations:,}")
+col3.metric("Average citations", average_citations)
+col4.metric("Scientific journals", f"{total_journals:,}")
+col5.metric("Publication period", f"{first_year} – {last_year}")
+
+
+st.divider()
+
+
+# ============================================================
+# WORD CLOUD
+# ============================================================
+
+st.markdown("## Research topics")
+
+all_words = []
+
+for title in library["Title"]:
+    all_words.extend(clean_title(title))
+
+word_counts = Counter(all_words)
+
+col1, col2 = st.columns([2, 1])
+
+with col1:
+
+    if word_counts:
+
+        wordcloud = WordCloud(
+            width=1200,
+            height=500,
+            background_color="white",
+            max_words=60,
+            colormap="viridis",
+            collocations=False
+        ).generate_from_frequencies(word_counts)
+
+        fig, ax = plt.subplots(figsize=(12, 5))
+
+        ax.imshow(wordcloud, interpolation="bilinear")
+        ax.axis("off")
+
+        st.pyplot(fig)
+        plt.close(fig)
+
+    else:
+        st.info("No usable words found in publication titles.")
+
+
+with col2:
+
+    st.markdown("### Top 20 keywords")
+
+    keywords_df = pd.DataFrame(
+        word_counts.most_common(20),
+        columns=["Keyword", "Frequency"]
+    )
+
+    if not keywords_df.empty:
+
+        fig = px.bar(
+            keywords_df.sort_values("Frequency"),
+            x="Frequency",
+            y="Keyword",
+            orientation="h",
+            color="Frequency",
+            color_continuous_scale="Blues"
+        )
+
+        fig.update_layout(
+            showlegend=False,
+            coloraxis_showscale=False,
+            height=500,
+            margin=dict(l=0, r=10, t=10, b=10)
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+
+st.divider()
+
+
+# ============================================================
+# PUBLICATION ANALYSIS
+# ============================================================
+
+st.markdown("## Publication analysis")
+
+col1, col2 = st.columns(2)
+
+
+# Publications by year
+
+with col1:
+
+    st.markdown("### Publications by year")
+
+    year_df = (
+        library.dropna(subset=["Year"])
+        .groupby("Year")
+        .size()
+        .reset_index(name="Publications")
+        .sort_values("Year")
+    )
+
+    if not year_df.empty:
+
+        year_df["Year"] = year_df["Year"].astype(int).astype(str)
+
+        fig = px.bar(
+            year_df,
+            x="Year",
+            y="Publications",
+            text="Publications",
+            color_discrete_sequence=["#65A9D8"]
+        )
+
+        fig.update_layout(
+            xaxis_title="Publication year",
+            yaxis_title="Number of publications",
+            showlegend=False
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+
+# Publications by journal
+
+with col2:
+
+    st.markdown("### Top 20 scientific journals")
+
+    journal_df = (
+        library.groupby("Journal")
+        .size()
+        .reset_index(name="Publications")
+        .sort_values("Publications", ascending=False)
+        .head(20)
+        .sort_values("Publications")
+    )
+
+    fig = px.bar(
+        journal_df,
+        x="Publications",
+        y="Journal",
+        orientation="h",
+        color_discrete_sequence=["#65A9D8"]
+    )
+
+    fig.update_layout(
+        yaxis_title="",
+        xaxis_title="Number of publications",
+        showlegend=False,
+        height=600
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+st.divider()
+
+
+# ============================================================
+# JOURNAL INFORMATION
+# ============================================================
+
+st.markdown("## Scientific publishers and domains")
+
+# Merge journal metadata with publication data
+
+library_enriched = library.copy()
+
+library_enriched["Journal_key"] = (
+    library_enriched["Journal"].str.strip().str.lower()
+)
+
+journal_database["Journal_key"] = journal_database["Journal"]
+
+library_enriched = library_enriched.merge(
+    journal_database[
+        ["Journal_key", "Publisher", "Domain"]
+    ],
+    on="Journal_key",
+    how="left"
+)
+
+
+col1, col2 = st.columns(2)
+
+
+# Publishers
+
+with col1:
+
+    st.markdown("### Top 10 publishers")
+
+    publisher_df = (
+        library_enriched.dropna(subset=["Publisher"])
+        .groupby("Publisher")
+        .size()
+        .reset_index(name="Publications")
+        .sort_values("Publications", ascending=False)
+        .head(10)
+    )
+
+    if not publisher_df.empty:
+
+        fig = px.pie(
+            publisher_df,
+            names="Publisher",
+            values="Publications",
+            hole=0.35
+        )
+
+        fig.update_layout(height=450)
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    else:
+        st.info("No publisher information found.")
+
+
+# Scientific domains
+
+with col2:
+
+    st.markdown("### Scientific domains")
+
+    domain_df = (
+        library_enriched.dropna(subset=["Domain"])
+        .groupby("Domain")
+        .size()
+        .reset_index(name="Publications")
+        .sort_values("Publications", ascending=False)
+    )
+
+    if not domain_df.empty:
+
+        fig = px.pie(
+            domain_df,
+            names="Domain",
+            values="Publications",
+            hole=0.35
+        )
+
+        fig.update_layout(height=450)
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    else:
+        st.info("No domain information found.")
+
+
+st.divider()
+
+
+# ============================================================
+# WORLD MAP
+# ============================================================
+
+st.markdown("## International scientific collaborations")
+
+country_counts = Counter()
+
+for affiliation in library["Affiliations"]:
+
+    countries = extract_countries(affiliation)
+
+    # Count one publication per country, even if several
+    # affiliations from that country are present.
+
+    country_counts.update(countries)
+
+
+if country_counts:
+
+    world_df = pd.DataFrame(
+        country_counts.items(),
+        columns=["iso_alpha", "Publications"]
+    )
+
+    fig = px.choropleth(
+        world_df,
+        locations="iso_alpha",
+        color="Publications",
+        hover_name="iso_alpha",
+        color_continuous_scale="Blues",
+        projection="natural earth"
+    )
+
+    fig.update_layout(
+        height=550,
+        margin=dict(l=0, r=0, t=20, b=0)
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+else:
+
+    st.info(
+        "No countries could be identified in the Affiliations column."
+    )
+
+
+st.divider()
+
+
+# ============================================================
+# MOST CITED PUBLICATIONS
+# ============================================================
+
+st.markdown("## Top 5 most cited publications")
+
+top5 = (
+    library.sort_values(
+        "Cited by",
+        ascending=False
+    )
+    .head(5)
+    [["Title", "Year", "Cited by", "DOI", "Journal"]]
+    .copy()
+)
+
+top5["Year"] = top5["Year"].apply(
+    lambda x: int(x) if pd.notna(x) else None
+)
+
+st.dataframe(
+    top5,
+    use_container_width=True,
+    hide_index=True,
+    column_config={
+        "Title": st.column_config.TextColumn(
+            "Publication title",
+            width="large"
+        ),
+        "Cited by": st.column_config.NumberColumn(
+            "Citations",
+            format="%d"
+        ),
+        "DOI": st.column_config.LinkColumn(
+            "DOI",
+            display_text="Open DOI",
+            width="medium"
+        )
+    }
+)
+
+
+# ============================================================
+# DOWNLOAD ENRICHED DATASET
+# ============================================================
+
+st.divider()
+
+st.markdown("## Export data")
+
+csv_data = library_enriched.drop(
+    columns=["Journal_key"],
+    errors="ignore"
+).to_csv(index=False).encode("utf-8-sig")
+
+st.download_button(
+    label="Download enriched dataset",
+    data=csv_data,
+    file_name="scientific_publications_analysis.csv",
+    mime="text/csv"
+)
+
+st.caption(
+    "What's up Science? – Scientific publication analytics"
+)
