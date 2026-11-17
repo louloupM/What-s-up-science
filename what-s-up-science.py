@@ -130,6 +130,7 @@ def prepare_data(file_bytes):
     # Scopus uses "Source title"; older input used "Journal".
     column_map = {
         "Title": find_column(raw, ["Title"]),
+        "Publisher": find_column(raw, ["Publisher"]),
         "Abstract": find_column(raw, ["Abstract"]),
         "Year": find_column(raw, ["Year", "Publication Year"]),
         "Journal": find_column(raw, ["Source title", "Journal", "Source Title"]),
@@ -167,6 +168,7 @@ def prepare_data(file_bytes):
             df[col] = raw[col]
 
     df["Title"] = df["Title"].fillna("").astype(str).str.strip()
+    df["Publisher"] = df["Publisher"].fillna("").astype(str).str.strip()
     df["Abstract"] = df["Abstract"].fillna("").astype(str).str.strip()
     df["Journal"] = (
         df["Journal"].fillna("Unknown journal").astype(str).str.strip()
