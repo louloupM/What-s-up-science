@@ -401,7 +401,7 @@ st.markdown("## Research topics")
 
 all_words = []
 for abstract in filtered["Abstract"]:
-    all_words.extend(clean_abstract(abstract))
+    all_words.extend(clean_title(abstract))
 
 word_counts = Counter(all_words)
 left, right = st.columns([2, 1])
