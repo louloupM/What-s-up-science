@@ -150,7 +150,7 @@ def prepare_data(file_bytes):
         raise ValueError(
             "Colonnes indispensables absentes : "
             + ", ".join(missing)
-            + ". Le fichier doit notamment contenir Title, Year, Abstract et "
+            + ". Le fichier doit notamment contenir Year, Abstract et "
               "Source title (ou Journal)."
         )
 
@@ -224,12 +224,12 @@ def load_journal_database():
 # TEXT AND COUNTRY PROCESSING
 # ============================================================
 
-def clean_title(title):
-    title = str(title).lower()
-    title = re.sub(r"\([^)]*\)|\[[^]]*\]", " ", title)
-    title = re.sub(r"[^a-z\s-]", " ", title)
+def clean_abstract(abstract):
+    abstract = str(abstract).lower()
+    abstract = re.sub(r"\([^)]*\)|\[[^]]*\]", " ", abstract)
+    abstract = re.sub(r"[^a-z\s-]", " ", abstract)
     return [
-        word for word in title.split()
+        word for word in abstract.split()
         if len(word) > 2 and word not in STOPWORDS
     ]
 
@@ -401,7 +401,7 @@ st.markdown("## Research topics")
 
 all_words = []
 for abstract in filtered["Abstract"]:
-    all_words.extend(clean_title(abstract))
+    all_words.extend(clean_abstract(abstract))
 
 word_counts = Counter(all_words)
 left, right = st.columns([2, 1])
