@@ -3,7 +3,5 @@ pandas
 numpy
 plotly
 pycountry
-networkx
-wordcloud
-matplotlib
+scikit-learn
 requests
