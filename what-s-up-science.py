@@ -957,14 +957,29 @@ if filtered.empty:
 
 total_pubs = len(filtered)
 
-total_citations = int(
-    filtered["Cited by"].sum()
+# Ensure citation values are numeric before calculating bibliometric indicators.
+citation_values = (
+    pd.to_numeric(filtered["Cited by"], errors="coerce")
+    .fillna(0)
+    .clip(lower=0)
+    .astype(int)
 )
+
+total_citations = int(citation_values.sum())
 
 average_citations = (
     total_citations / total_pubs
     if total_pubs else 0
 )
+
+# h-index: the largest h for which at least h publications have >= h citations.
+sorted_citations = np.sort(citation_values.to_numpy())[::-1]
+h_index = int(
+    np.sum(sorted_citations >= np.arange(1, len(sorted_citations) + 1))
+)
+
+# i10-index: number of publications with at least 10 citations.
+i10_index = int((citation_values >= 10).sum())
 
 total_journals = filtered["Journal"].nunique()
 
@@ -1921,7 +1936,7 @@ with impact:
 
     section(
         "Sources & impact",
-        "Journal distribution, publishers, citations and open access."
+        "Journal distribution, publishers and citation impact."
     )
 
     left, right = st.columns(2)
@@ -1952,7 +1967,35 @@ with impact:
             "impact_publishers"
         )
 
+    with right:
 
+        section(
+            "Citation indicators",
+            "Bibliometric indicators calculated from the publications currently selected."
+        )
+
+        indicator_cols = st.columns(3)
+
+        with indicator_cols[0]:
+            kpi(
+                "Total citations",
+                f"{total_citations:,}",
+                "Sum of citations"
+            )
+
+        with indicator_cols[1]:
+            kpi(
+                "h-index",
+                f"{h_index:,}",
+                "Publications cited at least h times"
+            )
+
+        with indicator_cols[2]:
+            kpi(
+                "i10-index",
+                f"{i10_index:,}",
+                "Publications with ≥ 10 citations"
+            )
 
     st.divider()
 
