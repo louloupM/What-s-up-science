@@ -1561,7 +1561,7 @@ with collaborations:
                         mode="lines",
                         line=dict(
                             width=line_width + 2.5,
-                            color="rgba(14,165,233,0.13)"
+                            color="rgba(14,116,144,0.18)"
                         ),
                         hoverinfo="skip",
                         showlegend=False
@@ -1573,7 +1573,7 @@ with collaborations:
                         mode="lines",
                         line=dict(
                             width=line_width,
-                            color=f"rgba(8,145,178,{0.35 + 0.55 * strength:.3f})"
+                            color=f"rgba(15,118,140,{0.42 + 0.48 * strength:.3f})"
                         ),
                         hovertemplate=(
                             f"<b>{connection['Country 1']}</b> ↔ "
@@ -1595,8 +1595,8 @@ with collaborations:
                 mode="markers",
                 marker=dict(
                     size=publication_sizes + 10,
-                    color="#0EA5E9",
-                    opacity=0.10,
+                    color="#287F9B",
+                    opacity=0.13,
                     line=dict(width=0)
                 ),
                 hoverinfo="skip",
@@ -1613,10 +1613,10 @@ with collaborations:
                     sizemode="diameter",
                     color=map_country_data["Citations"],
                     colorscale=[
-                        [0.00, "#BAE6FD"],
-                        [0.35, "#38BDF8"],
-                        [0.70, "#0D9488"],
-                        [1.00, "#4F46E5"]
+                        [0.00, "#B8CBDD"],
+                        [0.30, "#6F9DBB"],
+                        [0.65, "#287F9B"],
+                        [1.00, "#344E86"]
                     ],
                     opacity=0.96,
                     line=dict(width=1.2, color="#FFFFFF"),
@@ -1648,27 +1648,27 @@ with collaborations:
                 showframe=False,
                 showcoastlines=False,
                 showcountries=True,
-                countrycolor="#CBD5E1",
-                countrywidth=0.8,
+                countrycolor="#F4F7FA",
+                countrywidth=0.9,
                 showland=True,
-                landcolor="#E8EFF6",
+                landcolor="#AFC0D0",
                 showocean=True,
-                oceancolor="#F7FAFC",
+                oceancolor="#DCE6EF",
                 showlakes=True,
-                lakecolor="#E0F2FE",
-                bgcolor="#F7FAFC"
+                lakecolor="#D2E0EA",
+                bgcolor="#DCE6EF"
             )
 
             fig.update_layout(
                 height=620,
                 margin=dict(l=0, r=0, t=8, b=0),
-                paper_bgcolor="#F7FAFC",
-                plot_bgcolor="#F7FAFC",
-                font=dict(family="DM Sans, sans-serif", color="#334155"),
+                paper_bgcolor="#DCE6EF",
+                plot_bgcolor="#DCE6EF",
+                font=dict(family="DM Sans, sans-serif", color="#26384A"),
                 hoverlabel=dict(
                     bgcolor="#FFFFFF",
-                    bordercolor="#0EA5E9",
-                    font=dict(color="#1E293B", size=12)
+                    bordercolor="#6F9DBB",
+                    font=dict(color="#26384A", size=12)
                 )
             )
 
