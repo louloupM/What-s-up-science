@@ -546,46 +546,73 @@ def country_name(code):
 
 
 @st.cache_data(show_spinner=False)
+
+@st.cache_data
 def get_country_coordinates():
-    """Return country centroid coordinates indexed by ISO-3 code."""
-
-    if not COUNTRYINFO_AVAILABLE:
-        return {}
-
-    coordinates = {}
-
+    """
+    Retourne les coordonnées géographiques des pays :
+    {
+        'FRA': (longitude, latitude),
+        'USA': (longitude, latitude),
+        ...
+    }
+    """
     try:
-        all_countries = CountryInfo().all()
+        from countryinfo import CountryInfo
 
-        # CountryInfo versions expose the database as a dictionary.
-        country_records = (
-            all_countries.values()
-            if isinstance(all_countries, dict)
-            else all_countries
-        )
+        countries = CountryInfo.all()
+        coordinates = {}
 
-        for country in country_records:
-            if not isinstance(country, dict):
+        for country_key, info in countries.items():
+
+            # Récupération du code ISO alpha-3
+            iso_data = info.get("ISO", {})
+
+            if isinstance(iso_data, dict):
+                iso3 = iso_data.get("alpha3")
+            else:
+                iso3 = None
+
+            # Compatibilité avec d'anciennes structures
+            if not iso3:
+                iso3 = info.get("ISO3") or info.get("iso3")
+
+            # Récupération des coordonnées
+            latlng = info.get("latlng")
+
+            if not iso3 or not latlng or len(latlng) < 2:
                 continue
 
-            iso_data = country.get("ISO", {})
-            iso3 = (
-                country.get("ISO3")
-                or (iso_data.get("alpha3") if isinstance(iso_data, dict) else None)
+            try:
+                latitude = float(latlng[0])
+                longitude = float(latlng[1])
+            except (TypeError, ValueError):
+                continue
+
+            if not (-90 <= latitude <= 90):
+                continue
+
+            if not (-180 <= longitude <= 180):
+                continue
+
+            coordinates[iso3.upper()] = (
+                longitude,
+                latitude
             )
-            latlng = country.get("latlng")
 
-            if iso3 and isinstance(latlng, (list, tuple)) and len(latlng) == 2:
-                try:
-                    coordinates[str(iso3).upper()] = {
-                        "Latitude": float(latlng[0]),
-                        "Longitude": float(latlng[1]),
-                    }
-                except (TypeError, ValueError):
-                    continue
+        if not coordinates:
+            raise ValueError(
+                "No valid country coordinates were found."
+            )
 
-    except Exception:
+        return coordinates
+
+    except Exception as e:
+        st.error(
+            f"Unable to load country coordinates: {e}"
+        )
         return {}
+
 
     return coordinates
 
