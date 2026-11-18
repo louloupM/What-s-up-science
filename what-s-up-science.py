@@ -1128,8 +1128,7 @@ with overview:
             )
 
             fig.update_traces(
-                textposition="outside",
-                textinfo="label",
+                textinfo="none",
                 marker=dict(
                     line=dict(color="white", width=3)
                 )
