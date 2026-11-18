@@ -614,8 +614,6 @@ def get_country_coordinates():
         return {}
 
 
-    return coordinates
-
 
 def great_circle_points(lon1, lat1, lon2, lat2, n=36):
     """Calculate points along a great-circle route, splitting at the dateline."""
