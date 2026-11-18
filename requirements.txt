@@ -3,5 +3,5 @@ pandas
 numpy
 plotly
 pycountry
-networkx
 countryinfo
+networkx
