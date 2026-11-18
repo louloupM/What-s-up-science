@@ -545,42 +545,82 @@ def country_name(code):
         return code
 
 
+# Fallback centroids for frequently encountered research countries.
+# The countryinfo package supplies the full list; these values keep the map
+# usable if that optional dataset cannot be loaded on the hosting platform.
+FALLBACK_COUNTRY_COORDINATES = {
+    "ARG": (-64.0, -34.0), "AUS": (134.0, -25.0),
+    "AUT": (14.0, 47.5), "BEL": (4.7, 50.5),
+    "BRA": (-52.0, -10.0), "CAN": (-106.0, 56.0),
+    "CHE": (8.2, 46.8), "CHL": (-71.0, -30.0),
+    "CHN": (105.0, 35.0), "COL": (-72.0, 4.0),
+    "CZE": (15.5, 49.8), "DEU": (10.4, 51.1),
+    "DNK": (9.5, 56.0), "EGY": (30.0, 26.0),
+    "ESP": (-4.0, 40.0), "FIN": (26.0, 64.0),
+    "FRA": (2.0, 46.0), "GBR": (-2.0, 54.0),
+    "GRC": (22.0, 39.0), "HUN": (19.0, 47.0),
+    "IDN": (118.0, -2.0), "IND": (79.0, 22.0),
+    "IRL": (-8.0, 53.0), "ISR": (35.0, 31.0),
+    "ITA": (12.5, 42.5), "JPN": (138.0, 37.0),
+    "KOR": (127.8, 36.0), "MEX": (-102.0, 23.0),
+    "MYS": (102.0, 4.0), "NLD": (5.5, 52.2),
+    "NOR": (10.0, 62.0), "NZL": (172.0, -41.0),
+    "POL": (19.0, 52.0), "PRT": (-8.0, 39.5),
+    "RUS": (100.0, 60.0), "SAU": (45.0, 24.0),
+    "SGP": (103.8, 1.35), "SWE": (15.0, 62.0),
+    "TUR": (35.0, 39.0), "TWN": (121.0, 24.0),
+    "UKR": (32.0, 49.0), "USA": (-98.0, 39.5),
+    "ZAF": (24.0, -29.0),
+}
+
+
 @st.cache_data(show_spinner=False)
-
-@st.cache_data
 def get_country_coordinates():
+    """Return {ISO-3: {Latitude, Longitude}} country centroids.
+
+    CountryInfo stores its data as a dictionary keyed by country name. The
+    ISO-3 code is nested under ``ISO['alpha3']`` and ``latlng`` is [lat, lon].
+    A built-in fallback prevents an empty map if the package is unavailable.
     """
-    Retourne les coordonnées géographiques des pays :
-    {
-        'FRA': (longitude, latitude),
-        'USA': (longitude, latitude),
-        ...
+
+    coordinates = {
+        code: {"Latitude": lat, "Longitude": lon}
+        for code, (lon, lat) in FALLBACK_COUNTRY_COORDINATES.items()
     }
-    """
+
+    if not COUNTRYINFO_AVAILABLE:
+        return coordinates
+
     try:
-        from countryinfo import CountryInfo
+        database = CountryInfo().all()
 
-        countries = CountryInfo.all()
-        coordinates = {}
+        if isinstance(database, dict):
+            country_records = database.values()
+        elif isinstance(database, (list, tuple)):
+            country_records = database
+        else:
+            country_records = []
 
-        for country_key, info in countries.items():
+        for country in country_records:
+            if not isinstance(country, dict):
+                continue
 
-            # Récupération du code ISO alpha-3
-            iso_data = info.get("ISO", {})
+            iso_data = country.get("ISO") or {}
+            iso3 = country.get("ISO3") or country.get("iso3")
 
-            if isinstance(iso_data, dict):
+            if not iso3 and isinstance(iso_data, dict):
                 iso3 = iso_data.get("alpha3")
-            else:
-                iso3 = None
 
-            # Compatibilité avec d'anciennes structures
+            # Some dataset versions expose the ISO code in geoJSON metadata.
             if not iso3:
-                iso3 = info.get("ISO3") or info.get("iso3")
+                try:
+                    iso3 = country["geoJSON"]["features"][0]["id"]
+                except (KeyError, IndexError, TypeError):
+                    pass
 
-            # Récupération des coordonnées
-            latlng = info.get("latlng")
+            latlng = country.get("latlng")
 
-            if not iso3 or not latlng or len(latlng) < 2:
+            if not iso3 or not isinstance(latlng, (list, tuple)) or len(latlng) < 2:
                 continue
 
             try:
@@ -589,30 +629,19 @@ def get_country_coordinates():
             except (TypeError, ValueError):
                 continue
 
-            if not (-90 <= latitude <= 90):
+            if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
                 continue
 
-            if not (-180 <= longitude <= 180):
-                continue
+            coordinates[str(iso3).strip().upper()] = {
+                "Latitude": latitude,
+                "Longitude": longitude,
+            }
 
-            coordinates[iso3.upper()] = (
-                longitude,
-                latitude
-            )
+    except Exception as error:
+        # Keep fallback centroids and let the map render instead of failing.
+        st.warning(f"Country centroid database unavailable; using fallback coordinates. ({error})")
 
-        if not coordinates:
-            raise ValueError(
-                "No valid country coordinates were found."
-            )
-
-        return coordinates
-
-    except Exception as e:
-        st.error(
-            f"Unable to load country coordinates: {e}"
-        )
-        return {}
-
+    return coordinates
 
 
 def great_circle_points(lon1, lat1, lon2, lat2, n=36):
@@ -1457,12 +1486,19 @@ with collaborations:
             columns=["ISO-3", "Publications"]
         )
 
+        country_data["ISO-3"] = (
+            country_data["ISO-3"].astype(str).str.strip().str.upper()
+        )
         country_data["Country"] = country_data["ISO-3"].map(country_name)
 
         # Citations are attributed to every country represented in a paper.
         country_citations = Counter()
         for paper_index, countries_in_paper in paper_countries:
-            citations = int(filtered.loc[paper_index, "Cited by"])
+            paper_row = filtered.loc[paper_index]
+            if isinstance(paper_row, pd.DataFrame):
+                citations = int(paper_row["Cited by"].fillna(0).sum())
+            else:
+                citations = int(paper_row["Cited by"] or 0)
             for iso3 in countries_in_paper:
                 country_citations[iso3] += citations
 
@@ -1504,13 +1540,14 @@ with collaborations:
             "Scientific output and international co-publication links across countries."
         )
 
-        if not COUNTRYINFO_AVAILABLE:
-            st.warning(
-                "Install countryinfo to display the geographic map: "
-                "pip install countryinfo"
-            )
-
         coordinates = get_country_coordinates()
+
+        if not COUNTRYINFO_AVAILABLE:
+            st.info(
+                "The full country centroid database is not installed. "
+                "The map is using built-in coordinates for common countries. "
+                "Add countryinfo to requirements.txt for worldwide coverage."
+            )
 
         country_data["Latitude"] = country_data["ISO-3"].map(
             lambda code: coordinates.get(code, {}).get("Latitude")
@@ -1525,8 +1562,8 @@ with collaborations:
 
         if map_country_data.empty:
             st.warning(
-                "Country coordinates could not be loaded. Check the countryinfo "
-                "installation, then restart the Streamlit application."
+                "No coordinates match the ISO-3 country codes found in this dataset. "
+                "Check the country aliases and the country codes extracted from Affiliations."
             )
         else:
             control1, control2 = st.columns(2)
