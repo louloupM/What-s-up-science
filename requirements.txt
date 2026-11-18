@@ -3,5 +3,5 @@ pandas
 numpy
 plotly
 pycountry
-scikit-learn
-requests
+networkx
+countryinfo
