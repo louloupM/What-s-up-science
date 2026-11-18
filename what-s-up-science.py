@@ -11,6 +11,13 @@ import plotly.graph_objects as go
 import pycountry
 import streamlit as st
 
+# Country coordinates for the world collaboration map
+try:
+    from countryinfo import CountryInfo
+    COUNTRYINFO_AVAILABLE = True
+except ImportError:
+    COUNTRYINFO_AVAILABLE = False
+
 # NetworkX is optional: used for the co-authorship network
 try:
     import networkx as nx
@@ -538,6 +545,117 @@ def country_name(code):
         return code
 
 
+@st.cache_data(show_spinner=False)
+def get_country_coordinates():
+    """Return country centroid coordinates indexed by ISO-3 code."""
+
+    if not COUNTRYINFO_AVAILABLE:
+        return {}
+
+    coordinates = {}
+
+    try:
+        all_countries = CountryInfo().all()
+
+        # CountryInfo versions expose the database as a dictionary.
+        country_records = (
+            all_countries.values()
+            if isinstance(all_countries, dict)
+            else all_countries
+        )
+
+        for country in country_records:
+            if not isinstance(country, dict):
+                continue
+
+            iso_data = country.get("ISO", {})
+            iso3 = (
+                country.get("ISO3")
+                or (iso_data.get("alpha3") if isinstance(iso_data, dict) else None)
+            )
+            latlng = country.get("latlng")
+
+            if iso3 and isinstance(latlng, (list, tuple)) and len(latlng) == 2:
+                try:
+                    coordinates[str(iso3).upper()] = {
+                        "Latitude": float(latlng[0]),
+                        "Longitude": float(latlng[1]),
+                    }
+                except (TypeError, ValueError):
+                    continue
+
+    except Exception:
+        return {}
+
+    return coordinates
+
+
+def great_circle_points(lon1, lat1, lon2, lat2, n=36):
+    """Calculate points along a great-circle route, splitting at the dateline."""
+
+    lon1_r, lat1_r, lon2_r, lat2_r = np.radians(
+        [lon1, lat1, lon2, lat2]
+    )
+
+    p1 = np.array([
+        np.cos(lat1_r) * np.cos(lon1_r),
+        np.cos(lat1_r) * np.sin(lon1_r),
+        np.sin(lat1_r),
+    ])
+    p2 = np.array([
+        np.cos(lat2_r) * np.cos(lon2_r),
+        np.cos(lat2_r) * np.sin(lon2_r),
+        np.sin(lat2_r),
+    ])
+
+    dot = np.clip(np.dot(p1, p2), -1.0, 1.0)
+    omega = np.arccos(dot)
+
+    if omega < 1e-10:
+        return [lon1, lon2], [lat1, lat2]
+
+    if np.isclose(np.sin(omega), 0):
+        # Antipodal or nearly antipodal points: straight interpolation fallback.
+        raw_lons = np.linspace(lon1, lon2, n)
+        raw_lats = np.linspace(lat1, lat2, n)
+    else:
+        points = []
+        for t in np.linspace(0, 1, n):
+            point = (
+                np.sin((1 - t) * omega) / np.sin(omega) * p1
+                + np.sin(t * omega) / np.sin(omega) * p2
+            )
+            point /= np.linalg.norm(point)
+            points.append(point)
+
+        points = np.asarray(points)
+        raw_lons = np.degrees(np.arctan2(points[:, 1], points[:, 0]))
+        raw_lats = np.degrees(
+            np.arctan2(
+                points[:, 2],
+                np.sqrt(points[:, 0] ** 2 + points[:, 1] ** 2),
+            )
+        )
+
+    lons, lats = [], []
+    previous_lon = None
+
+    for lon, lat in zip(raw_lons, raw_lats):
+        lon = float(lon)
+        lat = float(lat)
+
+        # Break the line where it crosses the ±180° meridian.
+        if previous_lon is not None and abs(lon - previous_lon) > 180:
+            lons.append(None)
+            lats.append(None)
+
+        lons.append(lon)
+        lats.append(lat)
+        previous_lon = lon
+
+    return lons, lats
+
+
 # ============================================================
 # 7. PLOTLY DESIGN HELPERS
 # ============================================================
@@ -650,11 +768,10 @@ def show_chart(fig, key=None):
             use_container_width=True,
             key=key,
             config={
-                "displayModeBar": True,
+                "displayModeBar": False,
                 "displaylogo": False,
-                "modeBarButtonsToRemove": [
-                    "lasso2d", "select2d"
-                ]
+                "scrollZoom": False,
+                "responsive": True,
             }
         )
 
@@ -1306,139 +1423,333 @@ with collaborations:
 
     if country_counts:
 
+        # --------------------------------------------------------
+        # COUNTRY METRICS
+        # --------------------------------------------------------
+
         country_data = pd.DataFrame(
             country_counts.items(),
             columns=["ISO-3", "Publications"]
         )
 
-        country_data["Country"] = (
-            country_data["ISO-3"].map(country_name)
+        country_data["Country"] = country_data["ISO-3"].map(country_name)
+
+        # Citations are attributed to every country represented in a paper.
+        country_citations = Counter()
+        for paper_index, countries_in_paper in paper_countries:
+            citations = int(filtered.loc[paper_index, "Cited by"])
+            for iso3 in countries_in_paper:
+                country_citations[iso3] += citations
+
+        country_data["Citations"] = (
+            country_data["ISO-3"].map(country_citations).fillna(0).astype(int)
         )
 
-        left, right = st.columns([1.5, 1])
+        # Build country collaboration pairs from papers containing >= 2 countries.
+        pairs = Counter()
+        for _, countries_in_paper in paper_countries:
+            for country_a, country_b in itertools.combinations(
+                sorted(countries_in_paper), 2
+            ):
+                pairs[(country_a, country_b)] += 1
 
-        with left:
+        pair_data = pd.DataFrame(
+            [
+                (a, b, country_name(a), country_name(b), count)
+                for (a, b), count in pairs.items()
+            ],
+            columns=[
+                "ISO A", "ISO B", "Country 1", "Country 2",
+                "Shared publications"
+            ]
+        )
 
-            section("Global research footprint")
+        if not pair_data.empty:
+            pair_data = pair_data.sort_values(
+                "Shared publications", ascending=False
+            ).reset_index(drop=True)
 
-            fig = px.choropleth(
-                country_data,
-                locations="ISO-3",
-                locationmode="ISO-3",
-                color="Publications",
-                hover_name="Country",
-                color_continuous_scale=[
-                    "#E7EDFF", "#536DFE", "#172554"
-                ]
+        # --------------------------------------------------------
+        # GLOBAL RESEARCH FOOTPRINT — DARK NETWORK MAP
+        # --------------------------------------------------------
+
+        st.divider()
+        section(
+            "Global Research Footprint",
+            "Scientific output and international co-publication links across countries."
+        )
+
+        if not COUNTRYINFO_AVAILABLE:
+            st.warning(
+                "Install countryinfo to display the geographic map: "
+                "pip install countryinfo"
             )
 
+        coordinates = get_country_coordinates()
+
+        country_data["Latitude"] = country_data["ISO-3"].map(
+            lambda code: coordinates.get(code, {}).get("Latitude")
+        )
+        country_data["Longitude"] = country_data["ISO-3"].map(
+            lambda code: coordinates.get(code, {}).get("Longitude")
+        )
+
+        map_country_data = country_data.dropna(
+            subset=["Latitude", "Longitude"]
+        ).copy()
+
+        if map_country_data.empty:
+            st.warning(
+                "Country coordinates could not be loaded. Check the countryinfo "
+                "installation, then restart the Streamlit application."
+            )
+        else:
+            control1, control2 = st.columns(2)
+
+            with control1:
+                max_connections = st.slider(
+                    "Maximum connections displayed",
+                    min_value=10,
+                    max_value=150,
+                    value=60,
+                    step=10,
+                    key="map_max_connections"
+                )
+
+            with control2:
+                maximum_shared = (
+                    int(pair_data["Shared publications"].max())
+                    if not pair_data.empty else 1
+                )
+                min_collaborations = st.slider(
+                    "Minimum shared publications",
+                    min_value=1,
+                    max_value=max(1, maximum_shared),
+                    value=1,
+                    key="map_min_collaborations"
+                )
+
+            fig = go.Figure()
+
+            # Select the strongest links after applying the threshold.
+            if not pair_data.empty:
+                visible_pairs = pair_data[
+                    pair_data["Shared publications"] >= min_collaborations
+                ].head(max_connections)
+            else:
+                visible_pairs = pair_data
+
+            if not visible_pairs.empty:
+                max_weight = max(
+                    1, int(visible_pairs["Shared publications"].max())
+                )
+
+                for _, connection in visible_pairs.iterrows():
+                    coord_a = coordinates.get(connection["ISO A"])
+                    coord_b = coordinates.get(connection["ISO B"])
+
+                    if not coord_a or not coord_b:
+                        continue
+
+                    lon_values, lat_values = great_circle_points(
+                        coord_a["Longitude"], coord_a["Latitude"],
+                        coord_b["Longitude"], coord_b["Latitude"]
+                    )
+
+                    weight = int(connection["Shared publications"])
+                    strength = weight / max_weight
+                    line_width = 0.7 + 2.3 * strength
+
+                    # Subtle halo, then the visible collaboration arc.
+                    fig.add_trace(go.Scattergeo(
+                        lon=lon_values,
+                        lat=lat_values,
+                        mode="lines",
+                        line=dict(
+                            width=line_width + 2.5,
+                            color="rgba(56,189,248,0.10)"
+                        ),
+                        hoverinfo="skip",
+                        showlegend=False
+                    ))
+
+                    fig.add_trace(go.Scattergeo(
+                        lon=lon_values,
+                        lat=lat_values,
+                        mode="lines",
+                        line=dict(
+                            width=line_width,
+                            color=f"rgba(56,189,248,{0.30 + 0.65 * strength:.3f})"
+                        ),
+                        hovertemplate=(
+                            f"<b>{connection['Country 1']}</b> ↔ "
+                            f"<b>{connection['Country 2']}</b>"
+                            f"<br>Shared publications: {weight}"
+                            "<extra></extra>"
+                        ),
+                        showlegend=False
+                    ))
+
+            # Outer halo around each country node.
+            publication_sizes = 8 + 5 * np.log1p(
+                map_country_data["Publications"].astype(float)
+            )
+
+            fig.add_trace(go.Scattergeo(
+                lon=map_country_data["Longitude"],
+                lat=map_country_data["Latitude"],
+                mode="markers",
+                marker=dict(
+                    size=publication_sizes + 10,
+                    color="#38BDF8",
+                    opacity=0.12,
+                    line=dict(width=0)
+                ),
+                hoverinfo="skip",
+                showlegend=False
+            ))
+
+            # Main nodes: size = publications, colour = citations.
+            fig.add_trace(go.Scattergeo(
+                lon=map_country_data["Longitude"],
+                lat=map_country_data["Latitude"],
+                mode="markers",
+                marker=dict(
+                    size=publication_sizes,
+                    sizemode="diameter",
+                    color=map_country_data["Citations"],
+                    colorscale=[
+                        [0.00, "#38BDF8"],
+                        [0.35, "#0EA5E9"],
+                        [0.70, "#6366F1"],
+                        [1.00, "#C084FC"]
+                    ],
+                    opacity=0.96,
+                    line=dict(width=1, color="#E0F2FE"),
+                    colorbar=dict(
+                        title=dict(text="Citations", font=dict(color="#CBD5E1")),
+                        tickfont=dict(color="#CBD5E1"),
+                        thickness=10,
+                        len=0.58,
+                        bgcolor="rgba(8,20,38,0.75)",
+                        outlinewidth=0
+                    )
+                ),
+                text=map_country_data["Country"],
+                customdata=np.column_stack([
+                    map_country_data["Publications"],
+                    map_country_data["Citations"]
+                ]),
+                hovertemplate=(
+                    "<b>%{text}</b>"
+                    "<br>Publications: %{customdata[0]:,.0f}"
+                    "<br>Citations: %{customdata[1]:,.0f}"
+                    "<extra></extra>"
+                ),
+                showlegend=False
+            ))
 
             fig.update_geos(
-                projection_type="equirectangular",
-                showcoastlines=True,
-                coastlinecolor="white",
-                showland=True,
-                landcolor="#F0F2F5",
-                showocean=True,
-                oceancolor="#FFFFFF",
+                projection_type="natural earth",
+                showframe=False,
+                showcoastlines=False,
                 showcountries=True,
-                countrycolor="#FFFFFF"
+                countrycolor="#263954",
+                countrywidth=0.55,
+                showland=True,
+                landcolor="#101F35",
+                showocean=True,
+                oceancolor="#081426",
+                showlakes=False,
+                bgcolor="#081426"
             )
 
             fig.update_layout(
-                height=520,
-                margin=dict(l=0, r=0, t=10, b=0),
-                coloraxis_colorbar=dict(title="Publications")
+                height=620,
+                margin=dict(l=0, r=0, t=8, b=0),
+                paper_bgcolor="#081426",
+                plot_bgcolor="#081426",
+                font=dict(family="DM Sans, sans-serif", color="#E2E8F0"),
+                hoverlabel=dict(
+                    bgcolor="#172B45",
+                    bordercolor="#38BDF8",
+                    font=dict(color="white", size=12)
+                )
             )
 
-            show_chart(
-                chart_layout(fig, 470, False),
-                "collaboration_map"
+            st.plotly_chart(
+                fig,
+                use_container_width=True,
+                config={
+                    "displayModeBar": False,
+                    "displaylogo": False,
+                    "scrollZoom": False,
+                    "responsive": True
+                },
+                key="global_research_footprint"
             )
 
-        with right:
+        # --------------------------------------------------------
+        # COUNTRY AND COLLABORATION RANKINGS
+        # --------------------------------------------------------
 
-            section("Top collaborating countries")
+        left, right = st.columns(2)
+
+        with left:
+            section("Top contributing countries")
 
             top_countries = (
-                country_data
-                .sort_values(
-                    "Publications",
-                    ascending=False
-                )
+                country_data.sort_values("Publications", ascending=False)
                 .head(15)
                 .sort_values("Publications")
             )
 
             show_chart(
                 horizontal_bar(
-                    top_countries,
-                    "Country",
-                    "Publications",
-                    470
+                    top_countries, "Country", "Publications", 470
                 ),
                 "collaboration_countries"
             )
 
-        # Country co-publication links
-        st.divider()
+        with right:
+            section("Strongest international collaborations")
 
+            if not pair_data.empty:
+                top_pairs = pair_data.head(15).copy()
+                top_pairs["Collaboration"] = (
+                    top_pairs["Country 1"] + " – " + top_pairs["Country 2"]
+                )
+                top_pairs = top_pairs.sort_values("Shared publications")
+
+                show_chart(
+                    horizontal_bar(
+                        top_pairs, "Collaboration", "Shared publications", 470
+                    ),
+                    "collaboration_pairs"
+                )
+            else:
+                st.info("No international co-publications detected.")
+
+        # --------------------------------------------------------
+        # DETAILED COLLABORATION TABLE
+        # --------------------------------------------------------
+
+        st.divider()
         section(
             "International co-publications",
             "Countries appearing together in the same publication."
         )
 
-        pairs = Counter()
-
-        for _, found in paper_countries:
-
-            for country_a, country_b in itertools.combinations(
-                sorted(found), 2
-            ):
-
-                pairs[(country_a, country_b)] += 1
-
-        if pairs:
-
-            pair_data = pd.DataFrame(
-                [
-                    (
-                        country_name(a),
-                        country_name(b),
-                        count
-                    )
-                    for (a, b), count in pairs.items()
-                ],
-                columns=[
-                    "Country 1",
-                    "Country 2",
-                    "Shared publications"
-                ]
-            ).sort_values(
-                "Shared publications",
-                ascending=False
-            )
-
-            min_shared = st.slider(
-                "Minimum shared publications",
-                min_value=1,
-                max_value=max(1, int(pair_data["Shared publications"].max())),
-                value=1
-            )
-
+        if not pair_data.empty:
             st.dataframe(
-                pair_data[
-                    pair_data["Shared publications"] >= min_shared
-                ],
+                pair_data[[
+                    "Country 1", "Country 2", "Shared publications"
+                ]],
                 use_container_width=True,
                 hide_index=True
             )
-
         else:
-
-            st.info(
-                "No international co-publication detected."
-            )
+            st.info("No international co-publication detected.")
 
     else:
 
