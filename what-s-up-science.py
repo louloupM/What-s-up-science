@@ -1952,41 +1952,7 @@ with impact:
             "impact_publishers"
         )
 
-    with right:
 
-        section("Open access")
-
-        oa_data = (
-            filtered["Open Access"]
-            .replace("", "Not specified")
-            .value_counts()
-            .head(8)
-            .reset_index()
-        )
-
-        oa_data.columns = [
-            "Status", "Publications"
-        ]
-
-        if not oa_data.empty:
-
-            fig = px.pie(
-                oa_data,
-                names="Status",
-                values="Publications",
-                hole=0.62,
-                color_discrete_sequence=COLORS
-            )
-
-            fig.update_traces(
-                textposition="outside",
-                textinfo="percent+label"
-            )
-
-            show_chart(
-                chart_layout(fig, 420),
-                "impact_open_access"
-            )
 
     st.divider()
 
