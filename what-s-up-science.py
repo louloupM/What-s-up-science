@@ -11,12 +11,7 @@ import plotly.graph_objects as go
 import pycountry
 import streamlit as st
 
-# Country coordinates for the world collaboration map
-try:
-    from countryinfo import CountryInfo
-    COUNTRYINFO_AVAILABLE = True
-except ImportError:
-    COUNTRYINFO_AVAILABLE = False
+# Country coordinates are stored locally: no external geodata package required.
 
 # NetworkX is optional: used for the co-authorship network
 try:
@@ -576,72 +571,16 @@ FALLBACK_COUNTRY_COORDINATES = {
 
 @st.cache_data(show_spinner=False)
 def get_country_coordinates():
-    """Return {ISO-3: {Latitude, Longitude}} country centroids.
+    """Return local ISO-3 centroids as {code: {Latitude, Longitude}}.
 
-    CountryInfo stores its data as a dictionary keyed by country name. The
-    ISO-3 code is nested under ``ISO['alpha3']`` and ``latlng`` is [lat, lon].
-    A built-in fallback prevents an empty map if the package is unavailable.
+    This intentionally avoids CountryInfo: its API differs between package
+    versions and can require a country_name argument during initialization.
+    The local dictionary makes deployment deterministic and works offline.
     """
-
-    coordinates = {
-        code: {"Latitude": lat, "Longitude": lon}
+    return {
+        code: {"Latitude": float(lat), "Longitude": float(lon)}
         for code, (lon, lat) in FALLBACK_COUNTRY_COORDINATES.items()
     }
-
-    if not COUNTRYINFO_AVAILABLE:
-        return coordinates
-
-    try:
-        database = CountryInfo().all()
-
-        if isinstance(database, dict):
-            country_records = database.values()
-        elif isinstance(database, (list, tuple)):
-            country_records = database
-        else:
-            country_records = []
-
-        for country in country_records:
-            if not isinstance(country, dict):
-                continue
-
-            iso_data = country.get("ISO") or {}
-            iso3 = country.get("ISO3") or country.get("iso3")
-
-            if not iso3 and isinstance(iso_data, dict):
-                iso3 = iso_data.get("alpha3")
-
-            # Some dataset versions expose the ISO code in geoJSON metadata.
-            if not iso3:
-                try:
-                    iso3 = country["geoJSON"]["features"][0]["id"]
-                except (KeyError, IndexError, TypeError):
-                    pass
-
-            latlng = country.get("latlng")
-
-            if not iso3 or not isinstance(latlng, (list, tuple)) or len(latlng) < 2:
-                continue
-
-            try:
-                latitude = float(latlng[0])
-                longitude = float(latlng[1])
-            except (TypeError, ValueError):
-                continue
-
-            if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
-                continue
-
-            coordinates[str(iso3).strip().upper()] = {
-                "Latitude": latitude,
-                "Longitude": longitude,
-            }
-
-    except Exception as error:
-        # Keep fallback centroids and let the map render instead of failing.
-        st.warning(f"Country centroid database unavailable; using fallback coordinates. ({error})")
-
-    return coordinates
 
 
 def great_circle_points(lon1, lat1, lon2, lat2, n=36):
@@ -1531,7 +1470,7 @@ with collaborations:
             ).reset_index(drop=True)
 
         # --------------------------------------------------------
-        # GLOBAL RESEARCH FOOTPRINT — DARK NETWORK MAP
+        # GLOBAL RESEARCH FOOTPRINT — INTERNATIONAL COLLABORATIONS
         # --------------------------------------------------------
 
         st.divider()
@@ -1541,13 +1480,6 @@ with collaborations:
         )
 
         coordinates = get_country_coordinates()
-
-        if not COUNTRYINFO_AVAILABLE:
-            st.info(
-                "The full country centroid database is not installed. "
-                "The map is using built-in coordinates for common countries. "
-                "Add countryinfo to requirements.txt for worldwide coverage."
-            )
 
         country_data["Latitude"] = country_data["ISO-3"].map(
             lambda code: coordinates.get(code, {}).get("Latitude")
@@ -1629,7 +1561,7 @@ with collaborations:
                         mode="lines",
                         line=dict(
                             width=line_width + 2.5,
-                            color="rgba(56,189,248,0.10)"
+                            color="rgba(14,165,233,0.13)"
                         ),
                         hoverinfo="skip",
                         showlegend=False
@@ -1641,7 +1573,7 @@ with collaborations:
                         mode="lines",
                         line=dict(
                             width=line_width,
-                            color=f"rgba(56,189,248,{0.30 + 0.65 * strength:.3f})"
+                            color=f"rgba(8,145,178,{0.35 + 0.55 * strength:.3f})"
                         ),
                         hovertemplate=(
                             f"<b>{connection['Country 1']}</b> ↔ "
@@ -1663,8 +1595,8 @@ with collaborations:
                 mode="markers",
                 marker=dict(
                     size=publication_sizes + 10,
-                    color="#38BDF8",
-                    opacity=0.12,
+                    color="#0EA5E9",
+                    opacity=0.10,
                     line=dict(width=0)
                 ),
                 hoverinfo="skip",
@@ -1681,19 +1613,19 @@ with collaborations:
                     sizemode="diameter",
                     color=map_country_data["Citations"],
                     colorscale=[
-                        [0.00, "#38BDF8"],
-                        [0.35, "#0EA5E9"],
-                        [0.70, "#6366F1"],
-                        [1.00, "#C084FC"]
+                        [0.00, "#BAE6FD"],
+                        [0.35, "#38BDF8"],
+                        [0.70, "#0D9488"],
+                        [1.00, "#4F46E5"]
                     ],
                     opacity=0.96,
-                    line=dict(width=1, color="#E0F2FE"),
+                    line=dict(width=1.2, color="#FFFFFF"),
                     colorbar=dict(
-                        title=dict(text="Citations", font=dict(color="#CBD5E1")),
-                        tickfont=dict(color="#CBD5E1"),
-                        thickness=10,
+                        title=dict(text="Citations", font=dict(color="#334155")),
+                        tickfont=dict(color="#475569"),
+                        thickness=12,
                         len=0.58,
-                        bgcolor="rgba(8,20,38,0.75)",
+                        bgcolor="rgba(255,255,255,0.88)",
                         outlinewidth=0
                     )
                 ),
@@ -1716,26 +1648,27 @@ with collaborations:
                 showframe=False,
                 showcoastlines=False,
                 showcountries=True,
-                countrycolor="#263954",
-                countrywidth=0.55,
+                countrycolor="#CBD5E1",
+                countrywidth=0.8,
                 showland=True,
-                landcolor="#101F35",
+                landcolor="#E8EFF6",
                 showocean=True,
-                oceancolor="#081426",
-                showlakes=False,
-                bgcolor="#081426"
+                oceancolor="#F7FAFC",
+                showlakes=True,
+                lakecolor="#E0F2FE",
+                bgcolor="#F7FAFC"
             )
 
             fig.update_layout(
                 height=620,
                 margin=dict(l=0, r=0, t=8, b=0),
-                paper_bgcolor="#081426",
-                plot_bgcolor="#081426",
-                font=dict(family="DM Sans, sans-serif", color="#E2E8F0"),
+                paper_bgcolor="#F7FAFC",
+                plot_bgcolor="#F7FAFC",
+                font=dict(family="DM Sans, sans-serif", color="#334155"),
                 hoverlabel=dict(
-                    bgcolor="#172B45",
-                    bordercolor="#38BDF8",
-                    font=dict(color="white", size=12)
+                    bgcolor="#FFFFFF",
+                    bordercolor="#0EA5E9",
+                    font=dict(color="#1E293B", size=12)
                 )
             )
 
